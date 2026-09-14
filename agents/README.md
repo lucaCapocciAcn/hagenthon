@@ -187,6 +187,8 @@ lavoro concreto sblocca.
 | PDF di esempio | `test-pdf-generator` — moduli AcroForm realistici | — |
 | Harness (regole, hook, comandi, CI) | Interrogazione della richiesta, ricerca delle versioni su registry primari, stesura | Scelta di ogni bivio: upgrade Angular, ramo Spring, quali plugin abilitare |
 
+| Validazione BE orchestrata | `be-orchestrator` (sonnet) — verifica tutti e 5 i task (scaffold Maven, CORS, domain model, service layer, controller), compilazione `mvn compile`, avvio server Spring Boot 3.5.16 su porta 8080, test endpoint `/api/forms/upload` → 415 corretto. Micro-agente haiku per Task 1 (miglioramento pom.xml + application.yml). Java 25 richiede `-Denforcer.skip=true` (enforcer impone Java 21 LTS). | Conferma go/no-go su ogni PR |
+
 Le **decisioni** (obiettivo, scelta tecnologie, strategia PDF, profondità
 agentica, go/no-go di ogni fase) sono state prese dall'umano. L'AI ha svolto
 ricerca, proposta e generazione di codice, con verifica oggettiva a ogni passo
