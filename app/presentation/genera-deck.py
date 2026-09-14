@@ -187,21 +187,20 @@ segno(s, MX, Inches(1.55), Inches(0.78))
 text(s, MX, Inches(2.7), Inches(11.0), Inches(1.5),
      [{"t": "Un campo alla volta", "sz": 62, "b": True, "c": BIANCO}])
 text(s, MX, Inches(4.05), Inches(9.4), Inches(1.1),
-     [{"t": "Chi non capisce il linguaggio burocratico\ncompila il modulo da solo, fino in fondo.",
-       "sz": 23, "c": GRIGIO_CH, "ls": 1.3}])
+     [{"t": "La burocrazia parla difficile.\nTu rispondi normale.",
+       "sz": 27, "c": GRIGIO_CH, "ls": 1.3}])
 filetto(s, MX, Inches(5.6), Inches(1.5), VIOLA, 3)
 text(s, MX, Inches(5.95), Inches(11.0), Inches(0.5),
      [{"t": "Carica il PDF   ·   Rispondi a una domanda alla volta   ·   Scarica il modulo compilato",
        "sz": 14.5, "b": True, "c": VIOLA_CHIA}])
 logo(s, scura=True)
-note(s, "0:00-0:15 — Titolo. Una frase sola: questo strumento non spiega il "
-        "documento, lo porta a termine. Tre passi, nessuna registrazione.")
+note(s, "0:00-0:15 — Titolo. Il difetto non è di chi legge: è del modulo, che chiede cose semplici in modo complicato. Lo strumento non spiega il documento, lo porta a termine. Tre passi, nessuna registrazione.")
 
 # ── 2 · Il problema ──────────────────────────────────────────────────────
 s = slide(BIANCO)
 occhiello(s, MX, Inches(0.82), "Il problema")
 text(s, MX, Inches(1.2), MW, Inches(1.0),
-     [{"t": "Il modulo non è difficile.\nÈ scritto in una lingua che non è la tua.",
+     [{"t": "Il modulo non chiede cose difficili.\nLe chiede in modo difficile.",
        "sz": 33, "b": True, "ls": 1.15}])
 
 box(s, MX, Inches(2.75), MW, Inches(1.45), GRIGIO_CH)
@@ -213,29 +212,27 @@ text(s, MX + Inches(0.42), Inches(3.68), Inches(10.5), Inches(0.35),
      [{"t": "Campo reale di una dichiarazione di residenza comunale", "sz": 11.5, "c": GRIGIO_TXT}])
 
 for i, (t1, t2) in enumerate([
-    ("Si ferma prima di iniziare",
-     "Non sa quale informazione le stia chiedendo, né come scriverla."),
-    ("Chiede aiuto a qualcuno",
-     "Un figlio, un patronato, un CAF. Ogni volta perde autonomia."),
+    ("Non dice cosa sta chiedendo",
+     "L'etichetta cita una norma. L'informazione che serve davvero non compare."),
+    ("Serve sempre qualcun altro",
+     "Un figlio, un patronato, un CAF. Per una cosa che riguarda solo te."),
     ("Il modulo resta bianco",
-     "E con lui la pratica: la residenza, il contributo, il diritto."),
+     "Con lui la pratica: la residenza, il contributo, il diritto."),
 ]):
     x = MX + Inches(i * 3.93)
     filetto(s, x, Inches(4.75), Inches(3.4), VIOLA, 2)
-    text(s, x, Inches(5.0), Inches(3.4), Inches(0.4),
-         [{"t": t1, "sz": 17.5, "b": True}])
-    text(s, x, Inches(5.52), Inches(3.4), Inches(1.0),
+    text(s, x, Inches(5.0), Inches(3.4), Inches(0.55),
+         [{"t": t1, "sz": 17.5, "b": True, "ls": 1.15}])
+    text(s, x, Inches(5.65), Inches(3.4), Inches(1.0),
          [{"t": t2, "sz": 13.5, "c": GRIGIO_TXT, "ls": 1.3}])
 logo(s)
-note(s, "0:15-0:45 — Il problema non è la persona, è il linguaggio. Leggere ad alta "
-        "voce l'etichetta: nessuno in sala sa cosa chiede, ed è un campo vero di un "
-        "modulo comunale. L'esito è sempre lo stesso: o chiede aiuto, o rinuncia.")
+note(s, "0:15-0:45 — Leggere ad alta voce l'etichetta e fermarsi un secondo: nessuno in sala sa cosa chiede, ed è un campo vero di un modulo comunale. Il punto è questo: l'informazione richiesta è banale — che titolo hai sulla casa — ma il modo di chiederla non lo è. L'esito è sempre lo stesso: o serve qualcun altro, o si rinuncia.")
 
 # ── 3 · La soluzione ─────────────────────────────────────────────────────
 s = slide(BIANCO)
 occhiello(s, MX, Inches(0.82), "La soluzione")
 text(s, MX, Inches(1.2), Inches(6.8), Inches(1.5),
-     [{"t": "Una domanda alla volta,\nin italiano semplice.", "sz": 33, "b": True, "ls": 1.15}])
+     [{"t": "Te lo chiediamo noi,\nuna domanda alla volta.", "sz": 33, "b": True, "ls": 1.15}])
 for i, (n, t1, t2) in enumerate([
     ("1", "Carica il PDF", "Un solo pulsante. Nessuna registrazione, nessuna configurazione."),
     ("2", "Rispondi", "Una domanda per schermata, in linguaggio comune."),
