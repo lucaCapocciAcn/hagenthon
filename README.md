@@ -17,7 +17,7 @@ Non spiega il documento: lo porta a termine.
 | Livello | Tecnologia |
 | --- | --- |
 | Frontend | Angular 21 (standalone components, signals) |
-| Backend | Spring Boot 3.x, Java 21, Maven |
+| Backend | Spring Boot 3.5, Java 21, Maven |
 | PDF | Apache PDFBox 3.x (AcroForm read/write) |
 | LLM | Ollama locale (`qwen2.5:7b`) — opzionale, con fallback |
 
@@ -62,11 +62,15 @@ Apri **http://localhost:4200**, carica un PDF AcroForm da
 [`app/samples/`](app/samples/), rispondi a una domanda alla volta e
 scarica il PDF compilato.
 
-### Test
+### Verifiche
 
 ```bash
-cd app/backend && mvn test   # logica PDFBox: estrazione + compilazione campi
+cd app/backend  && mvn verify   # test + Spotless (formato) + Error Prone (bug a compile time)
+cd app/frontend && npx ng build # build di produzione
 ```
+
+`mvn verify` è verde. `npx ng test` è **rosso** per uno spec scaffold mai adattato,
+guasto noto e tracciato: [issue #7](../../issues/7).
 
 ## Struttura del repository
 
@@ -75,9 +79,14 @@ cd app/backend && mvn test   # logica PDFBox: estrazione + compilazione campi
 | `app/backend/` | Backend Spring Boot (controller / service / config) |
 | `app/frontend/` | Frontend Angular 21 (UI accessibile) |
 | `app/samples/` | PDF AcroForm di esempio |
-| `agents/` | Struttura agentica usata per costruire il progetto |
+| `agents/` | Risorse agentiche: subagent, skill, regole, comandi, hook |
+| `docs/` | Deliverable della traccia |
 
 ## Documentazione
 
-- [`agents/README.md`](agents/README.md) — architettura agentica, scelte di modello, log AI/umano
+- [`docs/deliverable-tema-01.md`](docs/deliverable-tema-01.md) — **Persona & Barriera · Percorso
+  Assistito · Autonomia & Limiti**, i tre deliverable del tema, più il contributo AI
+- [`agents/README.md`](agents/README.md) — architettura agentica, scelte di modello,
+  regole, hook, comandi, e perché sono abilitati 3 plugin su 21
+- [`CLAUDE.md`](CLAUDE.md) — istruzioni per chi sviluppa (persona o agente)
 - [`app/samples/README.md`](app/samples/README.md) — descrizione dei PDF di esempio

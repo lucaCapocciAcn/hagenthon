@@ -1,6 +1,14 @@
 package com.hagenthon.uncampoallavolta.tools;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -9,19 +17,11 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
-import org.apache.pdfbox.cos.COSName;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generatore di PDF AcroForm di prova per la demo di Hagenthon.
@@ -101,12 +101,16 @@ public class SampleFormGenerator {
         fields.add(new FieldDefinition("luogo_nascita", "Luogo di nascita", "text"));
         fields.add(new FieldDefinition("data_nascita", "Data di nascita (gg/mm/aaaa)", "text"));
         fields.add(new FieldDefinition("codice_fiscale", "Codice fiscale", "text"));
-        fields.add(new FieldDefinition("titolo_occupazione", "Estremi del titolo di occupazione dell'alloggio ai sensi dell'art. 5 D.L. 47/2014", "text"));
+        fields.add(new FieldDefinition(
+                "titolo_occupazione",
+                "Estremi del titolo di occupazione dell'alloggio ai sensi dell'art. 5 D.L. 47/2014",
+                "text"));
         fields.add(new FieldDefinition("via_nuova", "Indirizzo di nuova dimora abituale - Via/Piazza", "text"));
         fields.add(new FieldDefinition("civico", "Numero civico", "text"));
         fields.add(new FieldDefinition("comune_nuovo", "Comune di nuova residenza", "text"));
         fields.add(new FieldDefinition("provincia_nuovo", "Provincia", "text"));
-        fields.add(new FieldDefinition("dichiarazione_47", "Dichiarazione sostitutiva ai sensi dell'art. 47 DPR 445/2000", "checkbox"));
+        fields.add(new FieldDefinition(
+                "dichiarazione_47", "Dichiarazione sostitutiva ai sensi dell'art. 47 DPR 445/2000", "checkbox"));
         fields.add(new FieldDefinition("data_dichiarazione", "Data della dichiarazione (gg/mm/aaaa)", "text"));
         fields.add(new FieldDefinition("firma", "Firma del dichiarante", "text"));
 
@@ -115,8 +119,7 @@ public class SampleFormGenerator {
                 pdfPath,
                 "DICHIARAZIONE DI RESIDENZA",
                 "Ai sensi dell'art. 4, comma 3 del decreto legislativo 6 settembre 1989, n. 322",
-                fields
-        );
+                fields);
         System.out.println("Created: " + pdfPath + " (" + fields.size() + " fields)");
     }
 
@@ -135,22 +138,25 @@ public class SampleFormGenerator {
         fields.add(new FieldDefinition("immobile_via", "Via/Piazza dell'immobile locato", "text"));
         fields.add(new FieldDefinition("immobile_civico", "Numero civico", "text"));
         fields.add(new FieldDefinition("immobile_comune", "Comune dell'immobile", "text"));
-        fields.add(new FieldDefinition("dichiaro_veridicita", "Dichiaro la veridicità di quanto sopra esposto ai sensi dell'art. 47 DPR 445/2000", "checkbox"));
+        fields.add(new FieldDefinition(
+                "dichiaro_veridicita",
+                "Dichiaro la veridicità di quanto sopra esposto ai sensi dell'art. 47 DPR 445/2000",
+                "checkbox"));
 
         String pdfPath = SAMPLES_DIR + "/contributo-affitto.pdf";
         createFormPdf(
                 pdfPath,
                 "DOMANDA DI CONTRIBUTO PER AFFITTO",
                 "Procedura per l'accesso al contributo straordinario per il pagamento dei canoni di locazione",
-                fields
-        );
+                fields);
         System.out.println("Created: " + pdfPath + " (" + fields.size() + " fields)");
     }
 
     /**
      * Crea un PDF AcroForm con i campi e le etichette forniti
      */
-    private static void createFormPdf(String filePath, String title, String subtitle, List<FieldDefinition> fields) throws IOException {
+    private static void createFormPdf(String filePath, String title, String subtitle, List<FieldDefinition> fields)
+            throws IOException {
         PDDocument doc = new PDDocument();
 
         // Setup form e font
@@ -172,7 +178,8 @@ public class SampleFormGenerator {
         doc.addPage(currentPage);
 
         // Titolo
-        try (PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
+        try (PDPageContentStream contentStream =
+                new PDPageContentStream(doc, currentPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
             contentStream.setFont(helvBold, 16);
             contentStream.beginText();
             contentStream.newLineAtOffset(MARGIN_LEFT, currentY);
@@ -199,7 +206,8 @@ public class SampleFormGenerator {
             }
 
             // Disegna l'etichetta
-            try (PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
+            try (PDPageContentStream contentStream =
+                    new PDPageContentStream(doc, currentPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
                 contentStream.setFont(helv, 11);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(LABEL_X, currentY);
@@ -251,9 +259,9 @@ public class SampleFormGenerator {
      * Definizione di un campo form
      */
     static class FieldDefinition {
-        String partialName;  // Nome tecnico (es. "cognome")
-        String label;        // Etichetta burocratica leggibile
-        String type;         // "text" o "checkbox"
+        String partialName; // Nome tecnico (es. "cognome")
+        String label; // Etichetta burocratica leggibile
+        String type; // "text" o "checkbox"
 
         FieldDefinition(String partialName, String label, String type) {
             this.partialName = partialName;

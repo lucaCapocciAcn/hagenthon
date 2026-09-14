@@ -5,6 +5,8 @@ model: sonnet
 tools: Write, Edit, Bash, Read
 ---
 
+**Prima di scrivere codice leggi [`agents/rules/spring-boot.md`](../rules/spring-boot.md)**
+— stai scrivendo dentro il backend e ne segui le regole.
 Implementa `PdfFormService` nel backend Spring Boot.
 **Carica la skill `pdf-acroform-toolkit`** per i pattern PDFBox esatti.
 

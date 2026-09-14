@@ -5,6 +5,8 @@ model: sonnet
 tools: Write, Edit, Bash, Read
 ---
 
+**Prima di scrivere codice leggi [`agents/rules/spring-boot.md`](../rules/spring-boot.md)**
+— vincola struttura dei package, injection, resilienza e test.
 Costruisci il backend Spring Boot in `app/backend/`. Codice minimale, pronto a girare.
 
 ## Stack

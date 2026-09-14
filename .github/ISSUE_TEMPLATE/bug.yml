@@ -1,0 +1,65 @@
+name: Bug
+description: Qualcosa non funziona come dovrebbe.
+title: "bug: "
+labels:
+  - "agent:ready"
+  - "prio:p1"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Descrivi il comportamento osservato, non la causa che immagini.
+        La diagnosi la fa chi prende in carico la issue.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Dove si manifesta il bug.
+      options:
+        - backend
+        - frontend
+        - harness (agenti / skill / hook / command)
+        - docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: Cosa succede
+      description: Il comportamento attuale. Includi messaggi di errore o stacktrace se ci sono.
+      placeholder: |
+        Carico un PDF con campi checkbox e la prima domanda torna vuota.
+        Log backend: java.lang.NullPointerException in PdfBoxFormService:118
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Cosa dovrebbe succedere
+      description: Il comportamento corretto atteso.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Come riprodurlo
+      description: Passi numerati. Indica quale PDF di esempio hai usato (vedi `app/samples/`).
+      placeholder: |
+        1. Avvia backend e frontend
+        2. Carica `app/samples/modulo-anagrafe.pdf`
+        3. Rispondi alla prima domanda
+        4. Osserva che ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente
+      description: Solo se rilevante — versione Java/Node, OS, se Ollama era raggiungibile.
+    validations:
+      required: false

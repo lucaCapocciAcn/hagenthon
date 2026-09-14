@@ -7,6 +7,4 @@ import java.util.Map;
  *
  * @param answers mappa fieldName → valore inserito dall'utente
  */
-public record AnswersRequest(
-        Map<String, String> answers
-) {}
+public record AnswersRequest(Map<String, String> answers) {}

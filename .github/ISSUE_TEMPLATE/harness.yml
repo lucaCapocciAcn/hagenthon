@@ -1,0 +1,76 @@
+name: Harness agentico
+description: Migliorare agenti, skill, rule, hook o command.
+title: "harness: "
+labels:
+  - "agent:ready"
+  - "area:harness"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Questa issue non cambia il comportamento dell'applicazione: cambia
+        **come gli agenti lavorano sul repo**. Prima di aprirla leggi `agents/README.md`.
+
+  - type: dropdown
+    id: resource-type
+    attributes:
+      label: Tipo di risorsa
+      options:
+        - agent (subagent con proprio system prompt)
+        - skill (istruzioni riusabili caricate on demand)
+        - rule (vincolo sempre attivo, es. CLAUDE.md)
+        - hook (automazione su evento)
+        - command (slash command)
+        - altro
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Risorsa interessata
+      description: Percorso del file, o `nuova` se va creata.
+      placeholder: agents/skills/pdf-acroform-toolkit/SKILL.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Comportamento agentico da correggere
+      description: Cosa fa oggi un agente che non dovrebbe fare, o cosa non riesce a fare. Riporta un caso reale osservato.
+      placeholder: |
+        L'agente PDF rigenera i sample invece di riusarli, perché la skill non dice
+        che `app/samples/` è già popolata. Succede a ogni sessione nuova.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Modifica proposta
+      description: Cosa scrivere o cambiare, concretamente.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Come si verifica che abbia funzionato
+      description: |
+        Una risorsa agentica è "verde" se un agente a freddo si comporta correttamente.
+        Indica il prompt di prova e il comportamento atteso. Se applicabile cita `harness-check`.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: token-impact
+    attributes:
+      label: Impatto sui token
+      description: L'efficienza dei token è un criterio di valutazione del progetto.
+      options:
+        - riduce i token consumati
+        - neutro
+        - aumenta i token, ma il beneficio lo giustifica
+    validations:
+      required: true

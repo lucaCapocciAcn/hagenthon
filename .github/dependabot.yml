@@ -1,0 +1,40 @@
+version: 2
+
+# Cadenza settimanale e pochi PR aperti: gli aggiornamenti non devono
+# coprire il lavoro sulle issue di prodotto.
+updates:
+  - package-ecosystem: maven
+    directory: /app/backend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels:
+      - "area:backend"
+      - "prio:p2"
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: npm
+    directory: /app/frontend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels:
+      - "area:frontend"
+      - "prio:p2"
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels:
+      - "area:harness"
+      - "prio:p2"
+    commit-message:
+      prefix: "chore(ci)"

@@ -1,0 +1,105 @@
+name: Feature
+description: Una funzionalità da implementare. Sempre full-stack.
+title: "feat: "
+labels:
+  - "agent:ready"
+  # Full-stack per regola: entrambe le aree sono sempre coinvolte.
+  - "area:backend"
+  - "area:frontend"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Regola ferma del maintainer: mai issue a metà stack.**
+        Backend e frontend vanno entrambi descritti. Se uno dei due non si applica,
+        lo dichiari esplicitamente scrivendo `non applicabile` **e la motivazione** —
+        non lo lasci vuoto. Una issue che descrive solo una metà viene rimandata indietro.
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Risultato atteso per l'utente
+      description: Cosa riesce a fare la persona che usa l'app, e che prima non riusciva a fare. Niente dettagli tecnici qui.
+      placeholder: Chi compila il modulo può tornare indietro di una domanda e correggere la risposta appena data.
+    validations:
+      required: true
+
+  - type: textarea
+    id: backend
+    attributes:
+      label: Backend — cosa cambia
+      description: |
+        Endpoint, servizi, DTO, stato di sessione, comportamento PDF o LLM.
+        Se non si applica scrivi `non applicabile` e perché.
+      placeholder: |
+        - `POST /api/forms/{sessionId}/answers` accetta `{"back": true}` e decrementa l'indice
+        - `FormSession` espone `previousQuestion()`
+        - Nessuna modifica a PdfBoxFormService
+    validations:
+      required: true
+
+  - type: textarea
+    id: frontend
+    attributes:
+      label: Frontend — cosa cambia
+      description: |
+        Schermate, componenti, signal, chiamate HTTP, stati di errore e caricamento.
+        Se non si applica scrivi `non applicabile` e perché.
+      placeholder: |
+        - Bottone "Torna indietro" nella schermata chat, nascosto sulla prima domanda
+        - Signal `canGoBack` derivato dall'indice corrente
+    validations:
+      required: true
+
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: Impatto sull'accessibilità
+      description: |
+        Il progetto esiste per persone con bassa alfabetizzazione digitale.
+        Vedi la skill `accessible-ui-guidelines`. Scrivi `nessuno` se davvero non tocca la UI.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criteri di accettazione
+      description: Condizioni verificabili. Devono poter essere tradotte in test.
+      placeholder: |
+        - [ ] Alla prima domanda il bottone indietro non è visibile
+        - [ ] Tornando indietro la risposta precedente è precompilata nel campo
+        - [ ] `mvn -B verify` verde
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area prevalente
+      description: Serve solo per instradare. L'issue resta comunque full-stack.
+      options:
+        - backend
+        - frontend
+        - entrambe in egual misura
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorità
+      options:
+        - p0 — blocca la demo
+        - p1 — importante
+        - p2 — se c'è tempo
+    validations:
+      required: true
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Fuori scope
+      description: Cosa questa issue esplicitamente NON fa, per evitare che si allarghi in corsa.
+    validations:
+      required: false

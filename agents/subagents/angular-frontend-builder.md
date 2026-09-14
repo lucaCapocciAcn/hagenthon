@@ -5,6 +5,8 @@ model: sonnet
 tools: Write, Edit, Bash, Read
 ---
 
+**Prima di scrivere codice leggi [`agents/rules/angular.md`](../rules/angular.md)**
+— vincola versione, signals, control flow e accessibilità.
 Costruisci il frontend Angular 21 in `app/frontend/`. Prima di scrivere UI,
 **carica la skill `accessible-ui-guidelines`** e rispettala in ogni dettaglio.
 

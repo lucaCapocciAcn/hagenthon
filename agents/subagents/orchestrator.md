@@ -12,6 +12,8 @@ Non scrivi codice applicativo: **decomponi, deleghi, integri, verifichi**.
 
 - `CLAUDE.md` — perimetro, stack, vincoli di progetto
 - `agents/README.md` — architettura agentica, scelte di modello
+- `agents/rules/` — le regole per area: **non caricarle tutte**, passa a
+  ogni builder solo quella della sua area (il contesto è un costo)
 
 ## Architettura target (fissa)
 

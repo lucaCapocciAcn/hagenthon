@@ -18,7 +18,11 @@ target/
 *.iml
 .vscode/
 
-# Documentazione locale (non tracciata)
-docs/
+# Stato locale degli strumenti agentici (non è un artefatto del progetto)
+.remember/
 .wayfinder/
-app/presentation/
+.claude/worktrees/
+
+# NOTA: docs/ e app/presentation/ NON vanno ignorati.
+# Sono deliverable richiesti dalla traccia e il repo viene letto da un agente
+# valutatore: ciò che non è committato, per lui non esiste.

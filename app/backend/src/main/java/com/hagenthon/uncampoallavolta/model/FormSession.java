@@ -1,8 +1,8 @@
 package com.hagenthon.uncampoallavolta.model;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
-
 import java.util.List;
+
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
 
 /**
  * Stato di sessione tenuto in memoria (nessuna persistenza).
