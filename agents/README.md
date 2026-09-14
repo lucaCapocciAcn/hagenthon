@@ -16,7 +16,7 @@ agents/
 ├── skills/      3 pattern riusabili           → come si fa una cosa specifica
 ├── rules/       4 regole per area             → cosa è ammesso in quest'area
 ├── commands/    3 comandi                     → il flusso di lavoro, eseguibile
-└── hooks/       3 hook                        → i vincoli, non negoziabili
+└── hooks/       5 hook + suite di test        → i vincoli, non negoziabili
 ```
 
 La differenza fra i quattro: una **skill** si carica quando serve un pattern
@@ -122,9 +122,13 @@ esistano. `_lib.sh` fornisce un `run_timeout` portabile perché **`timeout` è
 GNU e su macOS non esiste** — un hook che lo usa fallisce in silenzio. Verificabili a mano:
 
 ```bash
-echo '{"tool_input":{"command":"git commit -m x"}}' | ./agents/hooks/guard-main.sh
-echo "exit=$?"   # 2 = bloccato correttamente
+./agents/hooks/test-hooks.sh      # 21 casi, gira anche in CI
 ```
+
+Il match sui comandi git è **ancorato**, non su sottostringa: `echo "un git
+commit"` e `grep -rn "git push"` non vengono bloccati, mentre `cd app && git
+commit` e `git -c user.name=x commit` sì. Con il match ingenuo che c'era prima,
+l'autotest di questa stessa pagina si autobloccava.
 
 ## Il gate di review
 

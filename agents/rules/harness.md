@@ -46,9 +46,11 @@ una dipendenza mancante in locale, è scritto male.
 riceverebbe davvero:
 
 ```bash
-echo '{"tool_input":{"command":"git commit -m x"}}' | ./agents/hooks/guard-main.sh
-echo "exit=$?"   # 2 = bloccato correttamente
+./agents/hooks/test-hooks.sh      # 21 casi: blocchi veri, falsi positivi, timeout, orfani
 ```
+
+Se aggiungi un hook, **aggiungi i suoi casi lì dentro**. Un hook è codice che
+nessun compilatore guarda: senza test, un bug ci resta finché non fa danno.
 
 ## Prima di consegnare
 

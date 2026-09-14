@@ -9,11 +9,12 @@ raw="$(cat)"
 cmd="$(json_field '.tool_input.command' "$raw")"
 [ -z "$cmd" ] && exit 0
 
-# Solo creazione di branch. Uno switch normale non ci riguarda.
-case "$cmd" in
-  *"git switch -c"*|*"git switch --create"*|*"git checkout -b"*) ;;
-  *) exit 0 ;;
-esac
+# Solo creazione di branch, con match ancorato: uno switch normale non ci
+# riguarda, e nemmeno un comando che *nomina* `git switch -c` in una stringa.
+creates=0
+git_invokes switch "$cmd"   && printf '%s' "$cmd" | grep -qE '(^|[^-])-c( |$)|--create' && creates=1
+git_invokes checkout "$cmd" && printf '%s' "$cmd" | grep -qE '(^|[^-])-b( |$)'          && creates=1
+[ "$creates" -eq 1 ] || exit 0
 
 repo="${CLAUDE_PROJECT_DIR:-.}"
 cd "$repo" 2>/dev/null || exit 0

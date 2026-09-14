@@ -1,7 +1,7 @@
 ---
 description: Chiudi una issue — build AOT, lint, review obbligatoria di un subagent, poi commit e PR
 argument-hint: <numero-issue>
-allowed-tools: Bash(gh:*), Bash(git:*), Bash(mvn:*), Bash(npm:*), Bash(npx:*), Agent
+allowed-tools: Bash(gh:*), Bash(git:*), Bash(mvn:*), Bash(npm:*), Bash(npx:*), Bash(tail:*), Bash(head:*), Agent
 ---
 
 Chiudi il lavoro sulla issue **#$1**. **L'ordine dei passi non è negoziabile:

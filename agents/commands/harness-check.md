@@ -1,6 +1,6 @@
 ---
 description: Verifica che l'harness sia integro — hook eseguibili, symlink, label, regole referenziate
-allowed-tools: Bash(*)
+allowed-tools: Bash
 ---
 
 Verifica l'integrità dell'harness di questo repo e riporta in una tabella

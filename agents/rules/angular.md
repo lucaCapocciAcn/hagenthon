@@ -15,7 +15,7 @@ tre sue regole valgono solo da v22 e qui sarebbero sbagliate (vedi ultima sezion
 
 ## Componenti
 
-- **Standalone sempre.** Non scrivere `standalone: true`: è il default da v20,
+- **Standalone sempre.** Non scrivere `standalone: true`: è il default da v19,
   metterlo è rumore.
 - **`changeDetection: ChangeDetectionStrategy.OnPush` va messo esplicitamente.**
   In v21 non è ancora il default (lo diventa in v22).

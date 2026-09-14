@@ -57,6 +57,9 @@ jobs:
       - name: Lint (ESLint + regole di accessibilità)
         run: npm run lint
 
+      - name: Formattazione (Prettier)
+        run: npm run format:check
+
       # In Angular l'AOT non è un flag: il builder `application` compila sempre
       # in AOT. È qui che emergono gli errori di tipo nei template, che
       # `ng serve` non mostra. Per questo il build di CI è quello di produzione.
@@ -66,3 +69,15 @@ jobs:
       # `npm test` è volutamente assente: la suite è rossa per uno spec
       # scaffold mai adattato (issue #7). Va riattivato quando #7 è chiusa —
       # un job verde che salta i test è peggio di un job che non li ha.
+
+  harness:
+    name: Harness (hook)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Gli hook sono ~200 righe di shell che nessun compilatore guarda.
+      # Il bug `timeout` (GNU, assente su macOS) è sopravvissuto per ore
+      # proprio perché niente li eseguiva.
+      - name: Test degli hook
+        run: ./agents/hooks/test-hooks.sh

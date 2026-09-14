@@ -9,16 +9,14 @@ raw="$(cat)"
 cmd="$(json_field '.tool_input.command' "$raw")"
 [ -z "$cmd" ] && exit 0
 
-case "$cmd" in
-  *"git commit"*|*"git push"*) ;;
-  *) exit 0 ;;
-esac
+# Match ancorato, non su sottostringa: `echo "git commit"` non è un commit.
+git_invokes commit "$cmd" || git_invokes push "$cmd" || exit 0
 
 branch="$(git -C "${CLAUDE_PROJECT_DIR:-.}" rev-parse --abbrev-ref HEAD 2>/dev/null)"
 [ "$branch" != "main" ] && exit 0
 
 cat >&2 <<MSG
-BLOCCATO: sei su 'main'. Su questo repo main è protetto dall'harness.
+BLOCCATO: sei su 'main'. L'harness impedisce i commit diretti sul branch di default.
 
 Apri un branch prima di committare:
   git switch -c <tipo>/<slug>      # feat|fix|chore|docs|test

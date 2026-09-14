@@ -1,7 +1,7 @@
 ---
 description: Prendi in carico una issue — stato a agent:in-progress, branch derivato dal titolo, contesto
 argument-hint: <numero-issue>
-allowed-tools: Bash(gh issue:*), Bash(git switch:*), Bash(git fetch:*), Bash(git rev-parse:*), Bash(git status:*)
+allowed-tools: Bash(gh issue:*), Bash(git switch:*), Bash(git fetch:*), Bash(git pull:*), Bash(git rev-parse:*), Bash(git status:*), Bash(awk:*), Bash(head:*), Bash(sed:*)
 ---
 
 Prendi in carico la issue **#$1**.
