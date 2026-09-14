@@ -4,10 +4,35 @@ Hackathon Accenture · 14 settembre 2026 · Tema 01 — Accessibilità Digitale
 
 ---
 
+## Due presentazioni, due scopi diversi
+
+In questa cartella convivono due materiali. Non sono alternative: rispondono a
+domande diverse e vanno usati in momenti diversi.
+
+| | `un-campo-alla-volta.pptx` | `slides.md` + i tre deliverable |
+|---|---|---|
+| **A chi parla** | Chi deve capire il valore del prodotto | Chi valuta il progetto e il metodo |
+| **Cosa racconta** | Il problema, la soluzione, lo stack, la privacy | Persona, percorso, limiti, struttura agentica, contributo AI |
+| **Durata** | 3 minuti, 7 slide, minutaggio nelle note del relatore | 10 slide |
+| **Formato** | PowerPoint 16:9 già impaginato | Markdown, da impaginare sul template |
+
+Il `.pptx` si rigenera con `python genera-deck.py` (servono `python-pptx` e
+`Pillow`): le slide si modificano nello script, non a mano nel file, così il
+deck resta allineato a ciò che l'app fa davvero.
+
+Le immagini in `schermate/` sono **catture reali dell'applicazione in esecuzione**
+— non mockup: `dichiarazione-residenza.pdf` caricato, 13 campi compilati, PDF
+finale scaricato. Rifarle significa rieseguire l'app e ricatturarle.
+
+---
+
 ## Contenuto di questa cartella
 
 | File | Cosa contiene |
 |---|---|
+| `un-campo-alla-volta.pptx` | **Presentazione di vendita**, 7 slide, 3 minuti, con note del relatore |
+| `genera-deck.py` | Sorgente del `.pptx`: la presentazione si modifica qui |
+| `schermate/` | Schermate reali dell'app e il PDF compilato usati nel deck |
 | `slides.md` | Struttura delle slide (10 slide), bullet essenziali e speaker notes per ciascuna |
 | `01-persona-e-barriera.md` | Deliverable 1: chi è Anna, la barriera precisa, il momento esatto del blocco |
 | `02-percorso-assistito.md` | Deliverable 2: il percorso prima e dopo, passo per passo |
