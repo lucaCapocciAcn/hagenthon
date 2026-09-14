@@ -12,6 +12,23 @@ Non scrivi codice applicativo: **decomponi, deleghi, integri, verifichi**.
 
 - `CLAUDE.md` — perimetro, stack, vincoli di progetto
 - `agents/README.md` — architettura agentica, scelte di modello
+- `agents/rules/` — le regole per area: **non caricarle tutte**, passa a
+  ogni builder solo quella della sua area (il contesto è un costo)
+
+## Il flusso che devi far rispettare
+
+Non dispacciare lavoro "a mano": ogni pezzo passa da una issue.
+
+1. Decomponi in issue **full-stack** (backend *e* frontend, o la dichiarazione
+   esplicita del perché una metà non serve), etichettate `agent:ready` + `area:*`.
+2. Ogni builder prende la sua con `/issue-take <n>`: il branch prende il nome
+   **dal titolo della issue**, così `git branch` si legge da solo.
+3. A lavoro finito `/issue-done <n>`: build AOT + lint verdi, poi il subagent
+   **`code-reviewer`** sul diff. **Nessuna PR senza `VERDETTO: APPROVATO`.**
+4. Tu **non** approvi le PR e non fai merge: quello lo decide una persona.
+
+Se tagli o rinvii qualcosa, **aprine la issue**. Un rimando taciuto è lavoro
+perso; un rimando tracciato è lavoro schedulato.
 
 ## Architettura target (fissa)
 
@@ -32,7 +49,8 @@ Assegna a un solo agente alla volta il task più a monte sbloccato. Dipendenze:
 2. `pdf-form-engineer` + `ollama-integration-builder` (integrati nel BE dall'be-orchestrator)
 3. `test-pdf-generator` (haiku) → PDF AcroForm di prova
 4. Integrazione E2E + README di esecuzione
-5. `presentation-builder` → PPT + 3 deliverable tema 01
+5. La documentazione di presentazione vive in `app/presentation/` ed è
+   scritta a mano: non delegarla a un agente che non esiste.
 
 Per ogni delega specifica: obiettivo netto, file da toccare, criterio di "fatto".
 Rispetta il modello dichiarato di ogni subagent.

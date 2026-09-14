@@ -1,15 +1,16 @@
 package com.hagenthon.uncampoallavolta.controller;
 
-import com.hagenthon.uncampoallavolta.dto.AnswersRequest;
-import com.hagenthon.uncampoallavolta.dto.UploadResponse;
-import com.hagenthon.uncampoallavolta.service.FormService;
+import java.io.IOException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import com.hagenthon.uncampoallavolta.dto.AnswersRequest;
+import com.hagenthon.uncampoallavolta.dto.UploadResponse;
+import com.hagenthon.uncampoallavolta.service.FormService;
 
 /**
  * Controller REST per le operazioni sul modulo PDF.
@@ -61,8 +62,7 @@ public class FormController {
      * @return 200 OK con body {@link UploadResponse}
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UploadResponse> upload(@RequestParam("file") MultipartFile file)
-            throws IOException {
+    public ResponseEntity<UploadResponse> upload(@RequestParam("file") MultipartFile file) throws IOException {
         UploadResponse response = formService.processUpload(file);
         return ResponseEntity.ok(response);
     }
@@ -78,9 +78,8 @@ public class FormController {
      * @return 200 OK con body application/pdf e header Content-Disposition
      */
     @PostMapping(value = "/{sessionId}/answers", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<byte[]> submitAnswers(
-            @PathVariable String sessionId,
-            @RequestBody AnswersRequest request) throws IOException {
+    public ResponseEntity<byte[]> submitAnswers(@PathVariable String sessionId, @RequestBody AnswersRequest request)
+            throws IOException {
 
         byte[] compiledPdf = formService.compileAnswers(sessionId, request);
 
@@ -89,8 +88,6 @@ public class FormController {
         headers.setContentDispositionFormData("attachment", "modulo_compilato.pdf");
         headers.setContentLength(compiledPdf.length);
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(compiledPdf);
+        return ResponseEntity.ok().headers(headers).body(compiledPdf);
     }
 }

@@ -8,8 +8,4 @@ package com.hagenthon.uncampoallavolta.dto;
  * @param originalLabel  etichetta originale (burocratica) del campo
  * @param simpleQuestion domanda in linguaggio semplice, comprensibile
  */
-public record QuestionDto(
-        String fieldName,
-        String originalLabel,
-        String simpleQuestion
-) {}
+public record QuestionDto(String fieldName, String originalLabel, String simpleQuestion) {}

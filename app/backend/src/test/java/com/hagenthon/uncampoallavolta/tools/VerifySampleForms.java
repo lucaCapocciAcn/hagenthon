@@ -1,12 +1,12 @@
 package com.hagenthon.uncampoallavolta.tools;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
-import com.hagenthon.uncampoallavolta.service.impl.PdfBoxFormService;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
+import com.hagenthon.uncampoallavolta.service.impl.PdfBoxFormService;
 
 /**
  * Verifica che i PDF di prova possano essere estratti dal backend PdfBoxFormService.
@@ -20,8 +20,8 @@ public class VerifySampleForms {
         System.out.println("=== VERIFICA INTEGRAZIONE CON PdfBoxFormService ===\n");
 
         String[] pdfFiles = {
-                "/Users/luca.capocci/hagenthon/app/samples/dichiarazione-residenza.pdf",
-                "/Users/luca.capocci/hagenthon/app/samples/contributo-affitto.pdf"
+            "/Users/luca.capocci/hagenthon/app/samples/dichiarazione-residenza.pdf",
+            "/Users/luca.capocci/hagenthon/app/samples/contributo-affitto.pdf"
         };
 
         for (String pdfPath : pdfFiles) {
@@ -34,7 +34,8 @@ public class VerifySampleForms {
                 System.out.println("  Campi estratti: " + fields.size());
 
                 for (QuestionDto field : fields) {
-                    System.out.println("    - fieldName=" + field.fieldName() + ", originalLabel=" + field.originalLabel());
+                    System.out.println(
+                            "    - fieldName=" + field.fieldName() + ", originalLabel=" + field.originalLabel());
                 }
                 System.out.println();
             } catch (Exception e) {

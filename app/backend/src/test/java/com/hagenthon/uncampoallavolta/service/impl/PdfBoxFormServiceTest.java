@@ -1,10 +1,15 @@
 package com.hagenthon.uncampoallavolta.service.impl;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
@@ -14,12 +19,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
 
 /**
  * Test unitario per {@link PdfBoxFormService}.
@@ -53,16 +53,13 @@ class PdfBoxFormServiceTest {
             acroForm.setDefaultResources(acroForm.getDefaultResources());
 
             // Campo 1: cognome_nome con alternateFieldName
-            addTextField(doc, acroForm, page, "cognome_nome", "Cognome e Nome",
-                    new PDRectangle(50, 700, 200, 20));
+            addTextField(doc, acroForm, page, "cognome_nome", "Cognome e Nome", new PDRectangle(50, 700, 200, 20));
 
             // Campo 2: data_nascita con alternateFieldName
-            addTextField(doc, acroForm, page, "data_nascita", "Data di nascita",
-                    new PDRectangle(50, 660, 200, 20));
+            addTextField(doc, acroForm, page, "data_nascita", "Data di nascita", new PDRectangle(50, 660, 200, 20));
 
             // Campo 3: codice_fiscale — nessun alternateFieldName, fallback al nome
-            addTextFieldNoLabel(doc, acroForm, page, "codice_fiscale",
-                    new PDRectangle(50, 620, 200, 20));
+            addTextFieldNoLabel(doc, acroForm, page, "codice_fiscale", new PDRectangle(50, 620, 200, 20));
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             doc.save(out);
@@ -70,9 +67,14 @@ class PdfBoxFormServiceTest {
         }
     }
 
-    private void addTextField(PDDocument doc, PDAcroForm acroForm, PDPage page,
-                               String partialName, String alternateFieldName,
-                               PDRectangle rect) throws IOException {
+    private void addTextField(
+            PDDocument doc,
+            PDAcroForm acroForm,
+            PDPage page,
+            String partialName,
+            String alternateFieldName,
+            PDRectangle rect)
+            throws IOException {
         PDTextField field = new PDTextField(acroForm);
         field.setPartialName(partialName);
         field.setAlternateFieldName(alternateFieldName);
@@ -86,8 +88,8 @@ class PdfBoxFormServiceTest {
         acroForm.getFields().add(field);
     }
 
-    private void addTextFieldNoLabel(PDDocument doc, PDAcroForm acroForm, PDPage page,
-                                      String partialName, PDRectangle rect) throws IOException {
+    private void addTextFieldNoLabel(
+            PDDocument doc, PDAcroForm acroForm, PDPage page, String partialName, PDRectangle rect) throws IOException {
         PDTextField field = new PDTextField(acroForm);
         field.setPartialName(partialName);
         // Nessun alternateFieldName impostato: deve fare fallback al nome tecnico
@@ -115,10 +117,9 @@ class PdfBoxFormServiceTest {
                 .filter(f -> "cognome_nome".equals(f.fieldName()))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Campo 'cognome_nome' non trovato"));
-        assertEquals("Cognome e Nome", cognome.originalLabel(),
-                "originalLabel deve corrispondere all'alternateFieldName");
-        assertEquals("", cognome.simpleQuestion(),
-                "simpleQuestion deve essere vuota (riempita da QuestionGenerator)");
+        assertEquals(
+                "Cognome e Nome", cognome.originalLabel(), "originalLabel deve corrispondere all'alternateFieldName");
+        assertEquals("", cognome.simpleQuestion(), "simpleQuestion deve essere vuota (riempita da QuestionGenerator)");
 
         // Verifica campo data_nascita
         QuestionDto dataNascita = fields.stream()
@@ -132,7 +133,9 @@ class PdfBoxFormServiceTest {
                 .filter(f -> "codice_fiscale".equals(f.fieldName()))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Campo 'codice_fiscale' non trovato"));
-        assertEquals("codice_fiscale", codiceFiscale.originalLabel(),
+        assertEquals(
+                "codice_fiscale",
+                codiceFiscale.originalLabel(),
                 "Senza alternateFieldName, originalLabel deve fare fallback al nome tecnico");
     }
 
@@ -143,8 +146,7 @@ class PdfBoxFormServiceTest {
         Map<String, String> answers = Map.of(
                 "cognome_nome", "Rossi Maria",
                 "data_nascita", "15/03/1952",
-                "codice_fiscale", "RSSMRA52C55H501Z"
-        );
+                "codice_fiscale", "RSSMRA52C55H501Z");
 
         byte[] compiledPdf = service.fillForm(originalPdf, answers);
 
@@ -154,8 +156,7 @@ class PdfBoxFormServiceTest {
         // Verifica che il PDF risultante sia riapribile da PDFBox
         try (PDDocument reopened = Loader.loadPDF(compiledPdf)) {
             assertNotNull(reopened, "Il PDF compilato deve essere riapribile");
-            assertEquals(1, reopened.getNumberOfPages(),
-                    "Il PDF compilato deve avere 1 pagina");
+            assertEquals(1, reopened.getNumberOfPages(), "Il PDF compilato deve avere 1 pagina");
             // Dopo flatten l'AcroForm può essere null o avere campi senza widget:
             // l'importante è che il documento si carichi senza eccezioni.
         }
@@ -172,7 +173,8 @@ class PdfBoxFormServiceTest {
             pdfSenzaCampi = out.toByteArray();
         }
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(
+                IllegalArgumentException.class,
                 () -> service.extractFields(pdfSenzaCampi),
                 "Deve lanciare IllegalArgumentException per PDF senza AcroForm");
     }

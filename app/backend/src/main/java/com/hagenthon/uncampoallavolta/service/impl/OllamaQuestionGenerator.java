@@ -1,7 +1,9 @@
 package com.hagenthon.uncampoallavolta.service.impl;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
-import com.hagenthon.uncampoallavolta.service.QuestionGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +12,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
+import com.hagenthon.uncampoallavolta.service.QuestionGenerator;
 
 /**
  * Implementazione reale di {@link QuestionGenerator} che chiama Ollama
@@ -31,16 +32,14 @@ public class OllamaQuestionGenerator implements QuestionGenerator {
     private static final Logger log = LoggerFactory.getLogger(OllamaQuestionGenerator.class);
 
     /** System prompt — skill ollama-italian-prompting (validato). */
-    private static final String SYSTEM_MSG =
-            "Sei un assistente che semplifica il linguaggio burocratico italiano. " +
-            "Rispondi sempre e solo in italiano.";
+    private static final String SYSTEM_MSG = "Sei un assistente che semplifica il linguaggio burocratico italiano. "
+            + "Rispondi sempre e solo in italiano.";
 
     /** User prompt — skill ollama-italian-prompting (validato). */
-    private static final String USER_TEMPLATE =
-            "Il modulo contiene il campo: \"%s\".\n" +
-            "Scrivi UNA sola domanda, in italiano semplice, per una persona di 70 anni " +
-            "che non usa spesso il computer.\n" +
-            "Massimo 15 parole. Niente spiegazioni, solo la domanda.";
+    private static final String USER_TEMPLATE = "Il modulo contiene il campo: \"%s\".\n"
+            + "Scrivi UNA sola domanda, in italiano semplice, per una persona di 70 anni "
+            + "che non usa spesso il computer.\n"
+            + "Massimo 15 parole. Niente spiegazioni, solo la domanda.";
 
     private static final int MAX_WORDS = 18;
 
@@ -54,13 +53,11 @@ public class OllamaQuestionGenerator implements QuestionGenerator {
         this.model = model;
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(30_000);  // 30 s — messaggio chiaro nei log se Ollama non risponde
+        factory.setConnectTimeout(30_000); // 30 s — messaggio chiaro nei log se Ollama non risponde
         factory.setReadTimeout(30_000);
 
-        this.restClient = RestClient.builder()
-                .baseUrl(baseUrl)
-                .requestFactory(factory)
-                .build();
+        this.restClient =
+                RestClient.builder().baseUrl(baseUrl).requestFactory(factory).build();
     }
 
     // -------------------------------------------------------------------------
@@ -102,8 +99,10 @@ public class OllamaQuestionGenerator implements QuestionGenerator {
 
         } catch (Exception e) {
             // Ollama irraggiungibile, timeout o risposta malformata
-            log.error("QuestionGenerator: impossibile contattare Ollama per '{}': {} — uso fallback",
-                    originalLabel, e.getMessage());
+            log.error(
+                    "QuestionGenerator: impossibile contattare Ollama per '{}': {} — uso fallback",
+                    originalLabel,
+                    e.getMessage());
         }
 
         // Fallback: mai bloccare il flusso
@@ -119,16 +118,19 @@ public class OllamaQuestionGenerator implements QuestionGenerator {
         String userContent = String.format(USER_TEMPLATE, originalLabel);
 
         Map<String, Object> payload = Map.of(
-                "model", model,
-                "stream", false,
-                "options", Map.of("temperature", 0.3, "num_predict", 60),
-                "messages", List.of(
+                "model",
+                model,
+                "stream",
+                false,
+                "options",
+                Map.of("temperature", 0.3, "num_predict", 60),
+                "messages",
+                List.of(
                         Map.of("role", "system", "content", SYSTEM_MSG),
-                        Map.of("role", "user", "content", userContent)
-                )
-        );
+                        Map.of("role", "user", "content", userContent)));
 
-        Map<String, Object> response = restClient.post()
+        Map<String, Object> response = restClient
+                .post()
                 .uri("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
@@ -158,9 +160,6 @@ public class OllamaQuestionGenerator implements QuestionGenerator {
      * Rimuove eventuali virgolette (doppie o singole) attorno alla domanda.
      */
     private String sanitize(String content) {
-        return content.trim()
-                .replaceAll("^\"|\"$", "")
-                .replaceAll("^'|'$", "")
-                .trim();
+        return content.trim().replaceAll("^\"|\"$", "").replaceAll("^'|'$", "").trim();
     }
 }

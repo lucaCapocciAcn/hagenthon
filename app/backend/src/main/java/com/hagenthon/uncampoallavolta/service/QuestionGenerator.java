@@ -1,8 +1,8 @@
 package com.hagenthon.uncampoallavolta.service;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
-
 import java.util.List;
+
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
 
 /**
  * Interfaccia per la generazione di domande in linguaggio semplice.

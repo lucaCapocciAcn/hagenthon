@@ -5,6 +5,8 @@ model: sonnet
 tools: Write, Edit, Bash, Read
 ---
 
+**Prima di scrivere codice leggi [`agents/rules/spring-boot.md`](../rules/spring-boot.md)**
+— in particolare la regola sulla resilienza: il flusso non si blocca mai.
 Implementa `QuestionGenerator` nel backend Spring Boot.
 **Carica la skill `ollama-italian-prompting`** per il template di prompt validato.
 

@@ -5,19 +5,18 @@ import {
   inject,
   ViewChild,
   ElementRef,
-  AfterViewChecked
+  AfterViewChecked,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormService, Question } from './form.service';
 
 type Screen = 'upload' | 'chat';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent implements AfterViewChecked {
   private formService = inject(FormService);
@@ -46,11 +45,9 @@ export class AppComponent implements AfterViewChecked {
   total = computed(() => this.questions().length);
   currentQuestion = computed(() => this.questions()[this.currentIndex()]);
   isLast = computed(() => this.currentIndex() === this.total() - 1);
-  progressLabel = computed(
-    () => `Campo ${this.currentIndex() + 1} di ${this.total()}`
-  );
+  progressLabel = computed(() => `Campo ${this.currentIndex() + 1} di ${this.total()}`);
   progressPercent = computed(() =>
-    this.total() > 0 ? ((this.currentIndex() + 1) / this.total()) * 100 : 0
+    this.total() > 0 ? ((this.currentIndex() + 1) / this.total()) * 100 : 0,
   );
 
   // ── Upload ─────────────────────────────────────────────────────────────────
@@ -78,11 +75,9 @@ export class AppComponent implements AfterViewChecked {
       },
       error: (err) => {
         console.error('Errore caricamento:', err);
-        this.uploadError.set(
-          'Non è stato possibile caricare il modulo. Riprova.'
-        );
+        this.uploadError.set('Non è stato possibile caricare il modulo. Riprova.');
         this.uploading.set(false);
-      }
+      },
     });
   }
 
@@ -128,7 +123,7 @@ export class AppComponent implements AfterViewChecked {
       error: (err) => {
         console.error('Errore download:', err);
         this.downloading.set(false);
-      }
+      },
     });
   }
 

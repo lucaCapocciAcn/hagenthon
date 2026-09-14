@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Regole del progetto
+    url: https://github.com/lucaCapocciAcn/hagenthon/blob/main/CLAUDE.md
+    about: Vincoli di scope e regola "nessuna modifica al codice senza richiesta esplicita".
+  - name: Struttura agentica
+    url: https://github.com/lucaCapocciAcn/hagenthon/blob/main/agents/README.md
+    about: Agenti, skill, scelte di modello e log del contributo AI.

@@ -5,6 +5,8 @@ model: haiku
 tools: Write, Bash, Read
 ---
 
+Le fixture prodotte qui sono usate dai test: non modificarle per far passare
+un test che fallisce. Vedi [`agents/rules/spring-boot.md`](../rules/spring-boot.md).
 Genera 1-2 PDF AcroForm di esempio in `app/samples/`. Compito meccanico:
 segui il template, non improvvisare.
 

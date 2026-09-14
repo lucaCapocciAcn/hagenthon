@@ -29,7 +29,7 @@ export class FormService {
     return this.http.post(
       `${API_BASE}/api/forms/${sessionId}/answers`,
       { answers },
-      { responseType: 'blob' }
+      { responseType: 'blob' },
     );
   }
 }

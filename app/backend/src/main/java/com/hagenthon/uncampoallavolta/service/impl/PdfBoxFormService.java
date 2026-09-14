@@ -1,7 +1,11 @@
 package com.hagenthon.uncampoallavolta.service.impl;
 
-import com.hagenthon.uncampoallavolta.dto.QuestionDto;
-import com.hagenthon.uncampoallavolta.service.PdfFormService;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -9,11 +13,8 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.hagenthon.uncampoallavolta.dto.QuestionDto;
+import com.hagenthon.uncampoallavolta.service.PdfFormService;
 
 /**
  * Implementazione reale di {@link PdfFormService} basata su Apache PDFBox 3.x.
@@ -74,8 +75,11 @@ public class PdfBoxFormService implements PdfFormService {
                     // PDCheckBox richiede l'export value ("Yes"/"On") o "Off".
                     // Mappiamo risposte affermative comuni al valore di spunta reale.
                     String val = entry.getValue().trim().toLowerCase();
-                    boolean checked = val.equals("si") || val.equals("sì")
-                            || val.equals("yes") || val.equals("true") || val.equals("1");
+                    boolean checked = val.equals("si")
+                            || val.equals("sì")
+                            || val.equals("yes")
+                            || val.equals("true")
+                            || val.equals("1");
                     checkbox.setValue(checked ? checkbox.getOnValue() : "Off");
                 } else {
                     field.setValue(entry.getValue());

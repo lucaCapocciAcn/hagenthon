@@ -1,6 +1,6 @@
 # Hagenthon — Assistente alla compilazione di documenti burocratici
 
-Hackathon Agentic Coding · Accenture Application Engineering · 14 settembre 2026
+Compilazione guidata di moduli PDF burocratici, una domanda alla volta.
 Tema 01 — **Accessibilità Digitale**
 
 ## Il problema
@@ -15,6 +15,15 @@ Carichi il PDF. Il sistema lo legge, ti fa **una domanda alla volta in
 linguaggio semplice**, tu rispondi, e ti restituisce il **PDF compilato**.
 
 Non spiega il documento: lo porta a termine.
+
+## Stack
+
+| Livello | Tecnologia |
+| --- | --- |
+| Frontend | Angular 21 (standalone components, signals) |
+| Backend | Spring Boot 3.5, Java 21, Maven |
+| PDF | Apache PDFBox 3.x (AcroForm read/write) |
+| LLM | Ollama locale (`qwen2.5:7b`) — opzionale, con fallback |
 
 ## Come si esegue
 
@@ -55,29 +64,36 @@ Apri **http://localhost:4200**, carica un PDF di prova da
 [`app/samples/`](app/samples/), rispondi a una domanda alla volta e scarica il
 PDF compilato.
 
-### Test
+### Verifiche
 
 ```bash
-cd app/backend && mvn test     # logica PDFBox (estrazione + compilazione campi)
+cd app/backend  && mvn verify                          # test + Spotless + Error Prone
+cd app/frontend && npx ng build --configuration production   # build AOT
+cd app/frontend && npx ng lint                         # ESLint + regole di accessibilità
 ```
+
+`mvn verify` è verde. `npx ng test` è **rosso** per uno spec scaffold mai adattato,
+guasto noto e tracciato: [issue #7](../../issues/7).
 
 ## Struttura del repository
 
 | Cartella | Contenuto |
 | --- | --- |
-| `app/backend/` | backend Spring Boot (controller / service / config) |
-| `app/frontend/` | frontend Angular 21 (UI accessibile) |
-| `app/samples/` | PDF AcroForm di test per la demo |
-| `agents/` | le risorse agentiche usate per costruirlo (agenti, skill, tabella economia modelli) |
-| `docs/` | requisiti, caso d'uso, aggiornamenti |
-| `.wayfinder/` | la mappa delle decisioni (dall'idea alla realizzazione) |
+| `app/backend/` | Backend Spring Boot (controller / service / config) |
+| `app/frontend/` | Frontend Angular 21 (UI accessibile) |
+| `app/samples/` | PDF AcroForm di esempio, usati come fixture di test e per la demo |
+| `app/presentation/` | Materiale di presentazione del progetto |
+| `agents/` | Risorse agentiche: subagent, skill, regole, comandi, hook |
+| `docs/` | Documentazione di progetto: caso d'uso, requisiti, decisioni |
+| `.wayfinder/` | Mappa delle decisioni, dall'idea alla realizzazione |
 
 ## Documentazione
 
+- [`CLAUDE.md`](CLAUDE.md) — istruzioni per chi sviluppa, persona o agente:
+  regole, architettura, quale regola leggere per quale area
 - [`docs/caso-uso.md`](docs/caso-uso.md) — obiettivo, persona, percorso, limiti
-- [`docs/requisiti-consolidati.md`](docs/requisiti-consolidati.md) — regole dell'evento, criteri di valutazione, vincoli della traccia
+- [`docs/requisiti-consolidati.md`](docs/requisiti-consolidati.md) — requisiti e vincoli
 - [`docs/aggiornamenti.md`](docs/aggiornamenti.md) — cosa è cambiato dopo la chiusura dei requisiti
-
-## Team
-
-Hackathon a coppie — 5 ore di sviluppo.
+- [`agents/README.md`](agents/README.md) — architettura agentica, scelte di modello,
+  regole, hook, comandi
+- [`app/samples/README.md`](app/samples/README.md) — descrizione dei PDF di esempio

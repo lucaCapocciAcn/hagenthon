@@ -17,3 +17,12 @@ target/
 .idea/
 *.iml
 .vscode/
+
+# Stato locale degli strumenti agentici (non è un artefatto del progetto)
+.remember/
+.wayfinder/
+.claude/worktrees/
+
+# NOTA: docs/ e app/presentation/ NON vanno ignorati: contengono
+# documentazione di progetto che deve stare nel repo.
+.claude/pr-links.log
