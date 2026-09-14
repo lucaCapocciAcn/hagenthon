@@ -26,3 +26,11 @@ consolidati erano già stati scritti. Controllalo prima di implementare.
   DA CONFERMARE
 - **10:20** — consolidati obiettivo e caso d'uso in `docs/caso-uso.md`
   (persona, percorso, limiti, nodi aperti) → REQ-002..004, D-001, D-002
+- **10:31** — backend **Spring**, più un harness di skill/agenti dedicati a
+  strutturare il progetto Spring (righe 1130-1139) → D-003; rafforza D-002
+  (Angular frontend)
+- **10:36** — il repository va **pubblico**, così gli organizzatori possono
+  accedervi; è un esercizio, nessun vincolo di sicurezza (righe 1176-1186)
+  → DEL-029
+- **10:37** — il repo si può cancellare dopo che gli organizzatori hanno
+  scaricato il progetto (righe 1187-1190) → integra DEL-029

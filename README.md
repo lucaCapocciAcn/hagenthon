@@ -18,21 +18,59 @@ Non spiega il documento: lo porta a termine.
 
 ## Come si esegue
 
-> ⚠️ Da compilare quando l'applicazione è avviabile.
+Requisiti: **Java 21**, **Maven 3.9+**, **Node 22 / npm 10**. Ollama è consigliato
+ma facoltativo (senza, l'app funziona lo stesso: mostra l'etichetta originale del
+campo al posto della domanda semplificata — nessun crash).
+
+### 1. Ollama (consigliato, per le domande in linguaggio semplice)
 
 ```bash
-# installazione
-# avvio
-# test
+# macOS: brew install ollama   —   altrimenti https://ollama.com/download
+ollama pull qwen2.5:7b
+ollama serve   # se non è già attivo come servizio
+```
+
+Il modello e l'indirizzo sono configurabili in
+`app/backend/src/main/resources/application.properties`
+(`ollama.model`, `ollama.base-url`).
+
+### 2. Backend (Spring Boot, porta 8080)
+
+```bash
+cd app/backend
+mvn spring-boot:run
+```
+
+### 3. Frontend (Angular, porta 4200)
+
+```bash
+cd app/frontend
+npm install
+npm start
+```
+
+### 4. Uso
+
+Apri **http://localhost:4200**, carica un PDF di prova da
+[`app/samples/`](app/samples/), rispondi a una domanda alla volta e scarica il
+PDF compilato.
+
+### Test
+
+```bash
+cd app/backend && mvn test     # logica PDFBox (estrazione + compilazione campi)
 ```
 
 ## Struttura del repository
 
 | Cartella | Contenuto |
 | --- | --- |
-| `app/` | il software prodotto |
-| `agents/` | le risorse agentiche usate per costruirlo |
+| `app/backend/` | backend Spring Boot (controller / service / config) |
+| `app/frontend/` | frontend Angular 21 (UI accessibile) |
+| `app/samples/` | PDF AcroForm di test per la demo |
+| `agents/` | le risorse agentiche usate per costruirlo (agenti, skill, tabella economia modelli) |
 | `docs/` | requisiti, caso d'uso, aggiornamenti |
+| `.wayfinder/` | la mappa delle decisioni (dall'idea alla realizzazione) |
 
 ## Documentazione
 

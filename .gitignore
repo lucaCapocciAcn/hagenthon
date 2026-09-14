@@ -5,3 +5,15 @@ build/
 *.log
 .env
 .env.local
+
+# Java / Maven
+target/
+*.class
+
+# Angular
+.angular/
+
+# IDE
+.idea/
+*.iml
+.vscode/

@@ -1,0 +1,103 @@
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCHERMATA 1 — UPLOAD
+     ═══════════════════════════════════════════════════════════════════════ -->
+@if (screen() === 'upload') {
+  <main class="screen upload-screen" role="main">
+    <h1 class="app-title">Un campo alla volta</h1>
+    <p class="app-subtitle">
+      Carica il tuo modulo e ti aiutiamo a compilarlo<br>una domanda alla volta.
+    </p>
+
+    <label class="upload-btn" for="file-input" [class.uploading]="uploading()">
+      @if (uploading()) {
+        <span>Caricamento in corso…</span>
+      } @else {
+        <span>Carica il modulo</span>
+      }
+      <input
+        id="file-input"
+        type="file"
+        accept=".pdf"
+        class="sr-only"
+        [disabled]="uploading()"
+        (change)="onFileSelected($event)"
+        aria-label="Scegli il file PDF da caricare"
+      />
+    </label>
+
+    @if (uploadError()) {
+      <p class="error-msg" role="alert" aria-live="assertive">
+        {{ uploadError() }}
+      </p>
+    }
+  </main>
+}
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCHERMATA 2 — CHAT GUIDATA
+     ═══════════════════════════════════════════════════════════════════════ -->
+@if (screen() === 'chat') {
+  <main class="screen chat-screen" role="main">
+
+    <!-- Barra progresso -->
+    <header class="progress-header" aria-label="Avanzamento">
+      <span class="progress-label">{{ progressLabel() }}</span>
+      <div class="progress-bar" role="progressbar"
+           [attr.aria-valuenow]="progressPercent()"
+           aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+    </header>
+
+    <!-- Area domanda: aria-live per screen reader -->
+    <section class="question-area" aria-live="polite" aria-atomic="true">
+      <h2 class="question-text">{{ currentQuestion()!.simpleQuestion }}</h2>
+
+      <div class="answer-group">
+        <label class="answer-label" for="answer-input">La tua risposta</label>
+        <input
+          id="answer-input"
+          #answerInput
+          type="text"
+          class="answer-input"
+          [value]="currentAnswer()"
+          (input)="currentAnswer.set($any($event.target).value)"
+          (keydown)="onKeydown($event)"
+          autocomplete="off"
+          spellcheck="false"
+          aria-required="false"
+        />
+      </div>
+
+      <!-- Pulsante azione principale -->
+      @if (!isLast()) {
+        <button
+          type="button"
+          class="action-btn"
+          (click)="onNext()"
+          [disabled]="downloading()">
+          Avanti →
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="action-btn action-btn--download"
+          (click)="onNext()"
+          [disabled]="downloading()">
+          @if (downloading()) {
+            Preparazione del modulo…
+          } @else {
+            Scarica il modulo compilato
+          }
+        </button>
+      }
+    </section>
+
+    <!-- Riquadro testo originale del modulo (secondario) -->
+    <aside class="original-label-box" aria-label="Testo originale del modulo">
+      <span class="original-label-heading">Testo del modulo</span>
+      <span class="original-label-text">{{ currentQuestion()!.originalLabel }}</span>
+    </aside>
+
+  </main>
+}
