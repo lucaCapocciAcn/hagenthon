@@ -21,7 +21,13 @@ check() { # check <descrizione> <exit-atteso> <json> <hook>
 # Repo fittizio su main: serve per provare i guard senza toccare il repo vero.
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 git init -q -b main "$TMP" 2>/dev/null
-git -C "$TMP" commit -q --allow-empty -m init 2>/dev/null
+# -c esplicito: in CI git non ha user.email/user.name configurati e il commit
+# fallirebbe in silenzio, lasciando il repo senza HEAD.
+git -C "$TMP" -c user.email=test@example.invalid -c user.name=test \
+    commit -q --allow-empty -m init 2>/dev/null
+# Se la fixture non è valida i test sotto non provano niente: meglio fermarsi.
+git -C "$TMP" rev-parse --abbrev-ref HEAD >/dev/null 2>&1 || {
+  echo "FIXTURE NON VALIDA: il repo di prova non ha HEAD. Test interrotti."; exit 1; }
 
 echo "guard-main (su un repo il cui HEAD è main)"
 export CLAUDE_PROJECT_DIR="$TMP"
