@@ -219,7 +219,7 @@ public class SampleFormGenerator {
                 checkBox.setAlternateFieldName(fieldDef.label);
 
                 PDAnnotationWidget widget = checkBox.getWidgets().get(0);
-                widget.setRectangle(new PDRectangle(FIELD_X, currentY - 8, FIELD_X + 20, currentY + 14));
+                widget.setRectangle(new PDRectangle(FIELD_X, currentY - 8, 20, FIELD_HEIGHT));
                 widget.setPage(currentPage);
                 widget.setPrinted(true);
 
@@ -231,7 +231,7 @@ public class SampleFormGenerator {
                 textField.setAlternateFieldName(fieldDef.label);
 
                 PDAnnotationWidget widget = textField.getWidgets().get(0);
-                widget.setRectangle(new PDRectangle(FIELD_X, currentY - 8, FIELD_X + FIELD_WIDTH, currentY + 14));
+                widget.setRectangle(new PDRectangle(FIELD_X, currentY - 8, FIELD_WIDTH, FIELD_HEIGHT));
                 widget.setPage(currentPage);
                 widget.setPrinted(true);
 

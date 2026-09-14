@@ -5,6 +5,7 @@ import com.hagenthon.uncampoallavolta.service.PdfFormService;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,16 @@ public class PdfBoxFormService implements PdfFormService {
 
             for (Map.Entry<String, String> entry : answers.entrySet()) {
                 PDField field = form.getField(entry.getKey());
-                if (field != null) {
+                if (field == null) continue;
+
+                if (field instanceof PDCheckBox checkbox) {
+                    // PDCheckBox richiede l'export value ("Yes"/"On") o "Off".
+                    // Mappiamo risposte affermative comuni al valore di spunta reale.
+                    String val = entry.getValue().trim().toLowerCase();
+                    boolean checked = val.equals("si") || val.equals("sì")
+                            || val.equals("yes") || val.equals("true") || val.equals("1");
+                    checkbox.setValue(checked ? checkbox.getOnValue() : "Off");
+                } else {
                     field.setValue(entry.getValue());
                 }
             }
