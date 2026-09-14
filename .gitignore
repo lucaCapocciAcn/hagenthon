@@ -17,3 +17,8 @@ target/
 .idea/
 *.iml
 .vscode/
+
+# Documentazione locale (non tracciata)
+docs/
+.wayfinder/
+app/presentation/

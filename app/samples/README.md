@@ -1,6 +1,6 @@
-# Sample PDF Forms for Hagenthon Demo
+# Sample PDF Forms
 
-This directory contains two sample AcroForm PDF documents for testing the `pdf-form-engineer` demo.
+This directory contains two sample AcroForm PDF documents for testing the PDF extraction and compilation pipeline.
 
 ## Files
 

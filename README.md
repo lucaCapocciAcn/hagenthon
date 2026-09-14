@@ -1,47 +1,54 @@
-# Hagenthon — Assistente alla compilazione di documenti burocratici
+# Un campo alla volta
 
-Hackathon Agentic Coding · Accenture Application Engineering · 14 settembre 2026
-Tema 01 — **Accessibilità Digitale**
+Assistente intelligente per la compilazione guidata di moduli PDF burocratici.
 
 ## Il problema
 
-Una persona riceve un modulo della pubblica amministrazione e non riesce a
-compilarlo: i nomi dei campi sono in nomenclatura burocratica e non dicono
-quale informazione stiano chiedendo. Oggi si ferma lì, o deve chiedere aiuto.
+Chi riceve un modulo della pubblica amministrazione spesso non riesce a compilarlo autonomamente: i nomi dei campi sono in nomenclatura tecnica e non indicano quale informazione stiano richiedendo. La persona si blocca, o deve chiedere aiuto a qualcun altro.
 
 ## La soluzione
 
-Carichi il PDF. Il sistema lo legge, ti fa **una domanda alla volta in
-linguaggio semplice**, tu rispondi, e ti restituisce il **PDF compilato**.
+Carichi il PDF. Il sistema lo legge, pone **una domanda alla volta in linguaggio semplice**, e restituisce il **PDF compilato** con le risposte al posto giusto.
 
 Non spiega il documento: lo porta a termine.
 
+## Stack
+
+| Livello | Tecnologia |
+| --- | --- |
+| Frontend | Angular 21 (standalone components, signals) |
+| Backend | Spring Boot 3.x, Java 21, Maven |
+| PDF | Apache PDFBox 3.x (AcroForm read/write) |
+| LLM | Ollama locale (`qwen2.5:7b`) — opzionale, con fallback |
+
 ## Come si esegue
 
-Requisiti: **Java 21**, **Maven 3.9+**, **Node 22 / npm 10**. Ollama è consigliato
-ma facoltativo (senza, l'app funziona lo stesso: mostra l'etichetta originale del
-campo al posto della domanda semplificata — nessun crash).
+**Prerequisiti:** Java 21, Maven 3.9+, Node 22 / npm 10.
+Ollama è consigliato ma facoltativo: senza di esso, l'app mostra l'etichetta originale del campo invece della domanda semplificata — nessun crash.
 
-### 1. Ollama (consigliato, per le domande in linguaggio semplice)
+### 1. Ollama (consigliato)
 
 ```bash
-# macOS: brew install ollama   —   altrimenti https://ollama.com/download
+# macOS
+brew install ollama
+# oppure https://ollama.com/download
+
 ollama pull qwen2.5:7b
 ollama serve   # se non è già attivo come servizio
 ```
 
-Il modello e l'indirizzo sono configurabili in
+Modello e indirizzo configurabili in
 `app/backend/src/main/resources/application.properties`
 (`ollama.model`, `ollama.base-url`).
 
-### 2. Backend (Spring Boot, porta 8080)
+### 2. Backend — porta 8080
 
 ```bash
 cd app/backend
 mvn spring-boot:run
 ```
 
-### 3. Frontend (Angular, porta 4200)
+### 3. Frontend — porta 4200
 
 ```bash
 cd app/frontend
@@ -51,33 +58,26 @@ npm start
 
 ### 4. Uso
 
-Apri **http://localhost:4200**, carica un PDF di prova da
-[`app/samples/`](app/samples/), rispondi a una domanda alla volta e scarica il
-PDF compilato.
+Apri **http://localhost:4200**, carica un PDF AcroForm da
+[`app/samples/`](app/samples/), rispondi a una domanda alla volta e
+scarica il PDF compilato.
 
 ### Test
 
 ```bash
-cd app/backend && mvn test     # logica PDFBox (estrazione + compilazione campi)
+cd app/backend && mvn test   # logica PDFBox: estrazione + compilazione campi
 ```
 
 ## Struttura del repository
 
 | Cartella | Contenuto |
 | --- | --- |
-| `app/backend/` | backend Spring Boot (controller / service / config) |
-| `app/frontend/` | frontend Angular 21 (UI accessibile) |
-| `app/samples/` | PDF AcroForm di test per la demo |
-| `agents/` | le risorse agentiche usate per costruirlo (agenti, skill, tabella economia modelli) |
-| `docs/` | requisiti, caso d'uso, aggiornamenti |
-| `.wayfinder/` | la mappa delle decisioni (dall'idea alla realizzazione) |
+| `app/backend/` | Backend Spring Boot (controller / service / config) |
+| `app/frontend/` | Frontend Angular 21 (UI accessibile) |
+| `app/samples/` | PDF AcroForm di esempio |
+| `agents/` | Struttura agentica usata per costruire il progetto |
 
 ## Documentazione
 
-- [`docs/caso-uso.md`](docs/caso-uso.md) — obiettivo, persona, percorso, limiti
-- [`docs/requisiti-consolidati.md`](docs/requisiti-consolidati.md) — regole dell'evento, criteri di valutazione, vincoli della traccia
-- [`docs/aggiornamenti.md`](docs/aggiornamenti.md) — cosa è cambiato dopo la chiusura dei requisiti
-
-## Team
-
-Hackathon a coppie — 5 ore di sviluppo.
+- [`agents/README.md`](agents/README.md) — architettura agentica, scelte di modello, log AI/umano
+- [`app/samples/README.md`](app/samples/README.md) — descrizione dei PDF di esempio

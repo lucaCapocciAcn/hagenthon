@@ -5,37 +5,45 @@ model: sonnet
 tools: Write, Edit, Bash, Read
 ---
 
-Costruisci il BE Spring Boot in `app/backend/`. Codice minimale, pronto a girare.
+Costruisci il backend Spring Boot in `app/backend/`. Codice minimale, pronto a girare.
 
 ## Stack
-- Java 21, Spring Boot 3.x, Maven. Dipendenze: `spring-boot-starter-web`,
-  `org.apache.pdfbox:pdfbox:3.0.x`. Nessun DB.
+
+- Java 21, Spring Boot 3.x, Maven.
+- Dipendenze: `spring-boot-starter-web`, `org.apache.pdfbox:pdfbox:3.0.x`.
+- Nessun database.
 
 ## Struttura package (obbligatoria)
+
 ```
 com.hagenthon.uncampoallavolta
 ├── config      (CORS per Angular su :4200, multipart)
 ├── controller  (FormController: i 2 endpoint)
-└── service     (FormService: orchestrazione; interfacce per PDF e Ollama)
+└── service     (FormService: orchestrazione; interfacce PdfFormService e QuestionGenerator)
 ```
 
 ## Endpoint
-- `POST /api/forms/upload` — multipart `file`. Ritorna
-  `{ sessionId, questions: [{ fieldName, originalLabel, simpleQuestion }] }`.
-- `POST /api/forms/{sessionId}/answers` — body `{ answers: { fieldName: value } }`.
-  Ritorna il PDF compilato (`application/pdf`, download).
 
-## Stato
-`Map<String, FormSession>` in un bean singleton. `FormSession` tiene i byte del
-PDF originale + la lista campi. Nessuna persistenza.
+- `POST /api/forms/upload` — multipart `file`.
+  Ritorna `{ sessionId, questions: [{ fieldName, originalLabel, simpleQuestion }] }`.
+- `POST /api/forms/{sessionId}/answers` — body `{ answers: { fieldName: value } }`.
+  Ritorna il PDF compilato (`application/pdf`, download inline).
+
+## Stato sessione
+
+`Map<String, FormSession>` in un bean singleton.
+`FormSession` contiene i byte del PDF originale + la lista dei campi.
+Nessuna persistenza: una sessione vive dall'upload al download.
 
 ## Confini
-- La lettura/scrittura AcroForm la fa `pdf-form-engineer` (definisci l'interfaccia
-  `PdfFormService` e lasciala implementare a lui, oppure stub temporaneo).
-- Le domande semplici le genera `ollama-integration-builder` (interfaccia
-  `QuestionGenerator`).
+
+- La lettura/scrittura AcroForm è delegata a `pdf-form-engineer`
+  (definisci l'interfaccia `PdfFormService` e lasciala implementare a lui).
+- Le domande semplificate sono delegate a `ollama-integration-builder`
+  (interfaccia `QuestionGenerator`).
 - CORS: consenti `http://localhost:4200`.
 
 ## Fatto quando
-`mvn spring-boot:run` parte, `/api/forms/upload` risponde (anche con stub), zero
-errori a compile-time. Aggiungi un `curl` di prova nel commento del controller.
+
+`mvn spring-boot:run` parte, `/api/forms/upload` risponde (anche con stub),
+zero errori a compile-time. Includi un esempio `curl` nel commento del controller.
