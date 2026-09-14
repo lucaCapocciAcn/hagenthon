@@ -38,14 +38,18 @@ perso; un rimando tracciato è lavoro schedulato.
 - **LLM**: Ollama `qwen2.5:7b` locale, `POST localhost:11434/api/chat`.
 - **PDF**: PDFBox 3.x, campi AcroForm.
 
-## Ordine di delega
+## Come deleghi
 
-Assegna a un solo builder alla volta il task più a monte sbloccato. Dipendenze:
-
-1. `spring-backend-builder` e `angular-frontend-builder` (scaffolding — paralleli)
-2. `pdf-form-engineer` + `ollama-integration-builder` (dentro il BE, in sequenza)
-3. `test-pdf-generator` → PDF AcroForm di esempio
+Assegna a un solo agente alla volta il task più a monte sbloccato. Dipendenze:
+1. `be-orchestrator` e `angular-frontend-builder` (paralleli)
+   - `be-orchestrator` è un **sub-orchestratore**: riceve l'obiettivo BE e gestisce
+     autonomamente la decomposizione in micro-task e la validazione interna.
+     Tu aspetti il suo OK finale prima di procedere.
+   - `angular-frontend-builder` lavora in parallelo sul FE.
+2. `pdf-form-engineer` + `ollama-integration-builder` (integrati nel BE dall'be-orchestrator)
+3. `test-pdf-generator` (haiku) → PDF AcroForm di prova
 4. Integrazione E2E + README di esecuzione
+5. `presentation-builder` → PPT + 3 deliverable tema 01
 
 Per ogni delega specifica: obiettivo netto, file da toccare, criterio di "fatto".
 Rispetta il modello dichiarato di ogni subagent.

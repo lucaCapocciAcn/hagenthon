@@ -1,14 +1,18 @@
-# Un campo alla volta
+# Hagenthon — Assistente alla compilazione di documenti burocratici
 
-Assistente intelligente per la compilazione guidata di moduli PDF burocratici.
+Compilazione guidata di moduli PDF burocratici, una domanda alla volta.
+Tema 01 — **Accessibilità Digitale**
 
 ## Il problema
 
-Chi riceve un modulo della pubblica amministrazione spesso non riesce a compilarlo autonomamente: i nomi dei campi sono in nomenclatura tecnica e non indicano quale informazione stiano richiedendo. La persona si blocca, o deve chiedere aiuto a qualcun altro.
+Una persona riceve un modulo della pubblica amministrazione e non riesce a
+compilarlo: i nomi dei campi sono in nomenclatura burocratica e non dicono
+quale informazione stiano chiedendo. Oggi si ferma lì, o deve chiedere aiuto.
 
 ## La soluzione
 
-Carichi il PDF. Il sistema lo legge, pone **una domanda alla volta in linguaggio semplice**, e restituisce il **PDF compilato** con le risposte al posto giusto.
+Carichi il PDF. Il sistema lo legge, ti fa **una domanda alla volta in
+linguaggio semplice**, tu rispondi, e ti restituisce il **PDF compilato**.
 
 Non spiega il documento: lo porta a termine.
 
@@ -23,32 +27,30 @@ Non spiega il documento: lo porta a termine.
 
 ## Come si esegue
 
-**Prerequisiti:** Java 21, Maven 3.9+, Node 22 / npm 10.
-Ollama è consigliato ma facoltativo: senza di esso, l'app mostra l'etichetta originale del campo invece della domanda semplificata — nessun crash.
+Requisiti: **Java 21**, **Maven 3.9+**, **Node 22 / npm 10**. Ollama è consigliato
+ma facoltativo (senza, l'app funziona lo stesso: mostra l'etichetta originale del
+campo al posto della domanda semplificata — nessun crash).
 
-### 1. Ollama (consigliato)
+### 1. Ollama (consigliato, per le domande in linguaggio semplice)
 
 ```bash
-# macOS
-brew install ollama
-# oppure https://ollama.com/download
-
+# macOS: brew install ollama   —   altrimenti https://ollama.com/download
 ollama pull qwen2.5:7b
 ollama serve   # se non è già attivo come servizio
 ```
 
-Modello e indirizzo configurabili in
+Il modello e l'indirizzo sono configurabili in
 `app/backend/src/main/resources/application.properties`
 (`ollama.model`, `ollama.base-url`).
 
-### 2. Backend — porta 8080
+### 2. Backend (Spring Boot, porta 8080)
 
 ```bash
 cd app/backend
 mvn spring-boot:run
 ```
 
-### 3. Frontend — porta 4200
+### 3. Frontend (Angular, porta 4200)
 
 ```bash
 cd app/frontend
@@ -58,15 +60,16 @@ npm start
 
 ### 4. Uso
 
-Apri **http://localhost:4200**, carica un PDF AcroForm da
-[`app/samples/`](app/samples/), rispondi a una domanda alla volta e
-scarica il PDF compilato.
+Apri **http://localhost:4200**, carica un PDF di prova da
+[`app/samples/`](app/samples/), rispondi a una domanda alla volta e scarica il
+PDF compilato.
 
 ### Verifiche
 
 ```bash
-cd app/backend  && mvn verify   # test + Spotless (formato) + Error Prone (bug a compile time)
-cd app/frontend && npx ng build # build di produzione
+cd app/backend  && mvn verify                          # test + Spotless + Error Prone
+cd app/frontend && npx ng build --configuration production   # build AOT
+cd app/frontend && npx ng lint                         # ESLint + regole di accessibilità
 ```
 
 `mvn verify` è verde. `npx ng test` è **rosso** per uno spec scaffold mai adattato,
@@ -78,15 +81,19 @@ guasto noto e tracciato: [issue #7](../../issues/7).
 | --- | --- |
 | `app/backend/` | Backend Spring Boot (controller / service / config) |
 | `app/frontend/` | Frontend Angular 21 (UI accessibile) |
-| `app/samples/` | PDF AcroForm di esempio |
+| `app/samples/` | PDF AcroForm di esempio, usati come fixture di test e per la demo |
+| `app/presentation/` | Materiale di presentazione del progetto |
 | `agents/` | Risorse agentiche: subagent, skill, regole, comandi, hook |
-| `docs/` | Deliverable della traccia |
+| `docs/` | Documentazione di progetto: caso d'uso, requisiti, decisioni |
+| `.wayfinder/` | Mappa delle decisioni, dall'idea alla realizzazione |
 
 ## Documentazione
 
-- [`docs/deliverable-tema-01.md`](docs/deliverable-tema-01.md) — **Persona & Barriera · Percorso
-  Assistito · Autonomia & Limiti**, i tre deliverable del tema, più il contributo AI
+- [`CLAUDE.md`](CLAUDE.md) — istruzioni per chi sviluppa, persona o agente:
+  regole, architettura, quale regola leggere per quale area
+- [`docs/caso-uso.md`](docs/caso-uso.md) — obiettivo, persona, percorso, limiti
+- [`docs/requisiti-consolidati.md`](docs/requisiti-consolidati.md) — requisiti e vincoli
+- [`docs/aggiornamenti.md`](docs/aggiornamenti.md) — cosa è cambiato dopo la chiusura dei requisiti
 - [`agents/README.md`](agents/README.md) — architettura agentica, scelte di modello,
-  regole, hook, comandi, e perché sono abilitati 3 plugin su 21
-- [`CLAUDE.md`](CLAUDE.md) — istruzioni per chi sviluppa (persona o agente)
+  regole, hook, comandi
 - [`app/samples/README.md`](app/samples/README.md) — descrizione dei PDF di esempio

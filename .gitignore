@@ -23,7 +23,6 @@ target/
 .wayfinder/
 .claude/worktrees/
 
-# NOTA: docs/ e app/presentation/ NON vanno ignorati.
-# Sono deliverable richiesti dalla traccia e il repo viene letto da un agente
-# valutatore: ciò che non è committato, per lui non esiste.
+# NOTA: docs/ e app/presentation/ NON vanno ignorati: contengono
+# documentazione di progetto che deve stare nel repo.
 .claude/pr-links.log
