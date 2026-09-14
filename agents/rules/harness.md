@@ -37,7 +37,7 @@ Dichiara sempre `description` (quando usarlo), `tools` (il minimo necessario) e
 
 ## Aggiungere un hook
 
-Un hook è codice che gira **sempre**, anche sulla macchina di chi valuta.
+Un hook è codice che gira **sempre**, su ogni macchina che fa checkout del repo.
 Quindi: esce `0` quando non ha niente da fare, non assume che `jq`, `mvn` o
 `prettier` esistano, e ha un `timeout`. Se un hook può bloccare il lavoro per
 una dipendenza mancante in locale, è scritto male.
@@ -46,7 +46,7 @@ una dipendenza mancante in locale, è scritto male.
 riceverebbe davvero:
 
 ```bash
-./agents/hooks/test-hooks.sh      # 21 casi: blocchi veri, falsi positivi, timeout, orfani
+./agents/hooks/test-hooks.sh      # blocchi veri, falsi positivi, timeout, processi orfani
 ```
 
 Se aggiungi un hook, **aggiungi i suoi casi lì dentro**. Un hook è codice che

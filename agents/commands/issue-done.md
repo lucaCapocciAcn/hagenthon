@@ -66,7 +66,8 @@ Chiudi con: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
 Nel corpo riporta:
 - l'esito **reale** dei comandi del passo 1 (incolla le righe che contano);
 - la **sintesi del verdetto** del `code-reviewer` e cosa hai cambiato dopo;
-- **dove ha contribuito l'AI e dove è servita revisione umana** (lo chiede la traccia).
+- **dove ha contribuito l'AI e dove è servita revisione umana**: dice a chi
+  rivede dove guardare con più attenzione.
 
 ### Passo 5 — Riporta il link della PR all'utente
 

@@ -33,7 +33,8 @@ Closes #
 
 ## Contributo AI vs revisione umana
 
-<!-- Obbligatorio: la traccia dell'hackathon richiede di dichiarare dove ha contribuito l'AI. -->
+<!-- Dichiarare cosa è stato generato e cosa verificato da una persona dice
+     a chi rivede dove concentrare l'attenzione. -->
 
 - **Generato dall'AI:**
 - **Scritto / corretto a mano:**

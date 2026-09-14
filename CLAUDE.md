@@ -85,7 +85,7 @@ le applica peggio di uno che ne ha tre pertinenti.
 cd app/backend  && mvn clean verify                          # test + Spotless + Error Prone
 cd app/frontend && npx ng build --configuration production   # build AOT
 cd app/frontend && npx ng lint                               # ESLint + regole di accessibilità
-./agents/hooks/test-hooks.sh                                 # 21 casi sugli hook
+./agents/hooks/test-hooks.sh                                 # suite degli hook
 ```
 
 ⚠️ Leggi sempre l'exit code **vero**: `comando | tail` restituisce quello di

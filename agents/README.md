@@ -6,7 +6,7 @@ gli strumenti con cui il lavoro è stato eseguito.
 
 I file in `agents/` sono **autoritativi**; Claude Code li esegue tramite symlink
 (`.claude/agents → agents/subagents`, `.claude/skills → agents/skills`,
-`.claude/commands → agents/commands`). Un solo posto da leggere per chi valuta,
+`.claude/commands → agents/commands`). Un solo posto da leggere per chi arriva sul repo,
 e gli strumenti trovano comunque tutto dove se lo aspettano. L'unico file reale
 dentro `.claude/` è `settings.json`, perché deve stare lì.
 
@@ -25,15 +25,16 @@ flusso; un **hook** non si può ignorare perché gira da solo.
 
 ---
 
-## Il vincolo che ha guidato ogni scelta: il costo in token
+## Il vincolo che ha guidato ogni scelta: il costo del contesto
 
-L'efficienza dei token è un criterio di valutazione dichiarato. Di conseguenza
-l'harness è progettato per **caricare poco e su richiesta**, non per sembrare
-grande:
+Tutto ciò che l'harness dichiara viene caricato in **ogni** sessione, anche in
+quelle che non ne hanno bisogno. Un harness grande non è un harness migliore:
+è un harness che diluisce le istruzioni che contano. Quindi è progettato per
+**caricare poco e su richiesta**:
 
 - `CLAUDE.md` non incolla le regole: ha una **tabella di routing** che dice
   quale file leggere per quale area. Chi tocca il backend non paga le regole Angular.
-- **3 plugin abilitati su 21 disponibili** (vedi sotto).
+- **Solo i plugin effettivamente usati sono abilitati** (vedi sotto).
 - Ogni agente ha il **modello più economico che regge il compito**.
 - Nessuna regola orfana: `/harness-check` segnala i file che nessuno carica.
 
@@ -47,8 +48,8 @@ grande:
                     └────────┬────────┘
          ┌──────────────────┬┴─────────────────────┐
          ▼                  ▼                       ▼
- spring-backend-    angular-frontend-    pdf-form-engineer
-   builder (S)        builder (S)        ollama-integration-builder (S)
+ be-orchestrator    angular-frontend-    pdf-form-engineer
+        (S)            builder (S)        ollama-integration-builder (S)
          └───────── test-pdf-generator (H) ──────────────────────────┘
 
   skill: pdf-acroform-toolkit · ollama-italian-prompting · accessible-ui-guidelines
@@ -61,7 +62,7 @@ haiku per task ripetitivi e template-driven.
 | Agente | Responsabilità | Modello | Motivazione |
 | --- | --- | --- | --- |
 | `orchestrator` | Decompone la spec, delega, integra, verifica | **opus** | Unico punto con ragionamento su dipendenze e trade-off dell'intero progetto |
-| `spring-backend-builder` | Spring Boot: controller/service/config, 2 endpoint | **sonnet** | Coding strutturato; nessun ragionamento cross-progetto |
+| `be-orchestrator` | Decompone il lavoro Spring Boot in task atomici, delega ai micro-agenti, valida il BE | **sonnet** | Coordina il backend senza scrivere codice applicativo |
 | `angular-frontend-builder` | Angular: UI accessibile | **sonnet** | Coding UI |
 | `pdf-form-engineer` | PDFBox: estrai e compila campi AcroForm | **sonnet** | Coding focalizzato su libreria specifica |
 | `ollama-integration-builder` | Client Ollama + generazione domande semplificate | **sonnet** | Coding + integrazione HTTP |
@@ -116,13 +117,13 @@ quelle regole sono scritte a mano per questo progetto.
 | `pr-link.sh` | `PostToolUse(Bash)` | Intercetta l'URL di una PR appena aperta, lo stampa e lo registra in `.claude/pr-links.log`. Una PR mai più nominata è lavoro che nessuno chiude |
 | `format-touched.sh` | `PostToolUse(Write\|Edit)` | Formatta solo il file toccato, in silenzio |
 
-Sono scritti per girare **anche sulla macchina di chi valuta**: escono `0`
+Sono scritti per girare **su qualsiasi macchina che faccia checkout**: escono `0`
 quando non hanno niente da fare e non assumono che `jq`, `mvn` o `prettier`
 esistano. `_lib.sh` fornisce un `run_timeout` portabile perché **`timeout` è
 GNU e su macOS non esiste** — un hook che lo usa fallisce in silenzio. Verificabili a mano:
 
 ```bash
-./agents/hooks/test-hooks.sh      # 21 casi, gira anche in CI
+./agents/hooks/test-hooks.sh      # gira anche in CI
 ```
 
 Il match sui comandi git è **ancorato**, non su sottostringa: `echo "un git
@@ -154,11 +155,12 @@ usa l'app. E **riesegue** build AOT, lint e test invece di fidarsi del diff.
 Aree (`area:backend|frontend|harness|docs`) e priorità (`prio:p0|p1|p2`).
 Regola completa: [`rules/workflow-issue.md`](rules/workflow-issue.md).
 
-## Plugin abilitati: 3 su 21 — e perché proprio questi
+## Plugin abilitati: tre, e perché proprio questi
 
-`.claude/settings.json` abilita a livello di progetto **solo tre** dei plugin
-disponibili nell'ambiente. Ogni plugin abilitato è contesto caricato a **ogni**
-sessione: abilitarli tutti sarebbe costato token su un criterio che viene misurato.
+`.claude/settings.json` ne abilita **tre**. Non è una lista da allungare a
+piacere: ogni plugin abilitato porta con sé le sue skill e i suoi comandi, che
+entrano nel contesto di **ogni** sessione. Aggiungerne uno è una decisione con
+un costo ricorrente, non un default.
 
 | Plugin | Perché è dentro |
 | --- | --- |
@@ -166,8 +168,9 @@ sessione: abilitarli tutti sarebbe costato token su un criterio che viene misura
 | `superpowers` | TDD e scrittura dei piani |
 | `mattpocock-skills` | `grilling`: interrogare una richiesta prima di implementarla |
 
-Tutti e tre sono **usati davvero** nel lavoro su questo repo. Un plugin abilitato
-e mai usato sarebbe costo puro.
+Tutti e tre sono **usati davvero**. Un plugin abilitato e mai usato è costo
+ricorrente a fronte di zero beneficio: prima di aggiungerne uno, chiediti quale
+lavoro concreto sblocca.
 
 ---
 
@@ -177,12 +180,12 @@ e mai usato sarebbe costo puro.
 | --- | --- | --- |
 | Scelta modello LLM | Analisi comparativa modelli Ollama | Conferma `qwen2.5:7b` e hardware disponibile |
 | Struttura agentica | Proposta agenti + skill + tabella modelli | Conferma profondità (6 agenti + 3 skill) e posizione file |
-| Scaffolding backend | `spring-backend-builder` — Spring Boot, 2 endpoint, interfacce | — |
+| Scaffolding backend | `spring-backend-builder` (poi sostituito da `be-orchestrator`) — Spring Boot, 2 endpoint, interfacce | — |
 | Scaffolding frontend | `angular-frontend-builder` + skill `accessible-ui-guidelines` | — |
 | Logica PDF | `pdf-form-engineer` + skill `pdf-acroform-toolkit` — PDFBox, test verdi | — |
 | Integrazione Ollama | `ollama-integration-builder` + skill `ollama-italian-prompting` — client + fallback | — |
 | PDF di esempio | `test-pdf-generator` — moduli AcroForm realistici | — |
-| Harness (regole, hook, comandi, CI) | Interrogazione della richiesta con `grilling`, ricerca versioni verificate, stesura | Scelta di ogni bivio: GitHub, upgrade Angular, ramo Spring, 3 plugin su 21 |
+| Harness (regole, hook, comandi, CI) | Interrogazione della richiesta, ricerca delle versioni su registry primari, stesura | Scelta di ogni bivio: upgrade Angular, ramo Spring, quali plugin abilitare |
 
 Le **decisioni** (obiettivo, scelta tecnologie, strategia PDF, profondità
 agentica, go/no-go di ogni fase) sono state prese dall'umano. L'AI ha svolto

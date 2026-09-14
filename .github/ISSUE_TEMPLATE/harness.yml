@@ -67,7 +67,7 @@ body:
     id: token-impact
     attributes:
       label: Impatto sui token
-      description: L'efficienza dei token è un criterio di valutazione del progetto.
+      description: Ogni file caricato è contesto pagato a ogni sessione.
       options:
         - riduce i token consumati
         - neutro

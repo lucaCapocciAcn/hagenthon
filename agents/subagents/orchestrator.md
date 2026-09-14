@@ -49,7 +49,8 @@ Assegna a un solo agente alla volta il task più a monte sbloccato. Dipendenze:
 2. `pdf-form-engineer` + `ollama-integration-builder` (integrati nel BE dall'be-orchestrator)
 3. `test-pdf-generator` (haiku) → PDF AcroForm di prova
 4. Integrazione E2E + README di esecuzione
-5. `presentation-builder` → PPT + 3 deliverable tema 01
+5. La documentazione di presentazione vive in `app/presentation/` ed è
+   scritta a mano: non delegarla a un agente che non esiste.
 
 Per ogni delega specifica: obiettivo netto, file da toccare, criterio di "fatto".
 Rispetta il modello dichiarato di ogni subagent.

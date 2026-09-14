@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SessionStart — briefing minimo: branch, issue prendibili, PR aperte.
-# Volutamente cortissimo: "efficienza dei token" è un criterio di valutazione,
-# quindi l'harness non versa contesto inutile a ogni avvio.
+# Volutamente cortissimo: gira a ogni avvio, quindi ogni riga in più è
+# contesto che paghi in tutte le sessioni, comprese quelle che non ne hanno bisogno.
 set -uo pipefail
 cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
 

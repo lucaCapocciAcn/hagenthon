@@ -1,5 +1,5 @@
 # Utility condivise dagli hook. Nessuna dipendenza obbligatoria:
-# gli hook girano anche sulla macchina di chi valuta.
+# gli hook girano su ogni macchina che fa checkout del repo, non solo sulla tua.
 
 # Estrae un campo dal JSON. jq se c'è, altrimenti fallback POSIX.
 json_field() {

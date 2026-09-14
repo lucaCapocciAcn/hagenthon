@@ -107,5 +107,6 @@ un pezzo: **apri una issue** per il pezzo rinviato e linkala. Un rimando traccia
   e lo impedisce apposta — il contributo degli agenti deve essere leggibile
   in diff separati.
 - Il corpo della PR dichiara **dove ha contribuito l'AI e dove è servita
-  revisione umana**. Non è burocrazia: è un requisito della traccia.
+  revisione umana**. Serve a chi rivede: sapere cosa è stato generato e cosa
+  verificato da una persona cambia dove concentrare l'attenzione.
 - `agent:review` non si auto-approva. Il merge lo decide una persona.
