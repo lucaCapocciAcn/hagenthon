@@ -29,3 +29,4 @@ docs/ricerca-referenze-hackathon.md
 # NOTA: docs/ e app/presentation/ NON vanno ignorati: contengono
 # documentazione di progetto che deve stare nel repo.
 .claude/pr-links.log
+app/presentation/.build/
