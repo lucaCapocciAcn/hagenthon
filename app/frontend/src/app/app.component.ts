@@ -135,6 +135,10 @@ export class AppComponent implements AfterViewChecked {
   // ── Lifecycle ──────────────────────────────────────────────────────────────
   ngAfterViewChecked(): void {
     if (this.shouldFocus && this.answerInputRef) {
+      // Imperatively clear the DOM value: Angular's [value] binding skips the
+      // update when the element was user-modified and the new signal value is
+      // the same as what Angular last SET (not what the user typed).
+      this.answerInputRef.nativeElement.value = '';
       this.answerInputRef.nativeElement.focus();
       this.shouldFocus = false;
     }
