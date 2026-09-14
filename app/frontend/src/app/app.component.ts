@@ -7,14 +7,14 @@ import {
   ElementRef,
   AfterViewChecked
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormService, Question } from './form.service';
 
 type Screen = 'upload' | 'chat';
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule],
+    imports: [],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
