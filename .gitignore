@@ -26,3 +26,4 @@ target/
 # NOTA: docs/ e app/presentation/ NON vanno ignorati.
 # Sono deliverable richiesti dalla traccia e il repo viene letto da un agente
 # valutatore: ciò che non è committato, per lui non esiste.
+.claude/pr-links.log

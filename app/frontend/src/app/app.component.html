@@ -5,7 +5,7 @@
   <main class="screen upload-screen" role="main">
     <h1 class="app-title">Un campo alla volta</h1>
     <p class="app-subtitle">
-      Carica il tuo modulo e ti aiutiamo a compilarlo<br>una domanda alla volta.
+      Carica il tuo modulo e ti aiutiamo a compilarlo<br />una domanda alla volta.
     </p>
 
     <label class="upload-btn" for="file-input" [class.uploading]="uploading()">
@@ -38,13 +38,16 @@
      ═══════════════════════════════════════════════════════════════════════ -->
 @if (screen() === 'chat') {
   <main class="screen chat-screen" role="main">
-
     <!-- Barra progresso -->
     <header class="progress-header" aria-label="Avanzamento">
       <span class="progress-label">{{ progressLabel() }}</span>
-      <div class="progress-bar" role="progressbar"
-           [attr.aria-valuenow]="progressPercent()"
-           aria-valuemin="0" aria-valuemax="100">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [attr.aria-valuenow]="progressPercent()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
         <div class="progress-fill" [style.width.%]="progressPercent()"></div>
       </div>
     </header>
@@ -71,11 +74,7 @@
 
       <!-- Pulsante azione principale -->
       @if (!isLast()) {
-        <button
-          type="button"
-          class="action-btn"
-          (click)="onNext()"
-          [disabled]="downloading()">
+        <button type="button" class="action-btn" (click)="onNext()" [disabled]="downloading()">
           Avanti →
         </button>
       } @else {
@@ -83,7 +82,8 @@
           type="button"
           class="action-btn action-btn--download"
           (click)="onNext()"
-          [disabled]="downloading()">
+          [disabled]="downloading()"
+        >
           @if (downloading()) {
             Preparazione del modulo…
           } @else {
@@ -98,6 +98,5 @@
       <span class="original-label-heading">Testo del modulo</span>
       <span class="original-label-text">{{ currentQuestion()!.originalLabel }}</span>
     </aside>
-
   </main>
 }

@@ -18,10 +18,72 @@ Le aree (`area:backend`, `area:frontend`, `area:harness`, `area:docs`) dicono
 ## Il flusso
 
 ```
-agent:ready ──/issue-take──▶ agent:in-progress ──/issue-done──▶ agent:review ──merge──▶ chiusa
-                                     │
-                                     └── manca una decisione ──▶ agent:blocked
+agent:ready ──/issue-take──▶ agent:in-progress ──/issue-done──┐
+                                     │                         │
+                                     │                   ┌─────▼─────┐
+                                     │                   │ build AOT │
+                                     │                   │   lint    │
+                                     │                   └─────┬─────┘
+                                     │                         │
+                                     │                ┌────────▼────────┐
+                                     │                │  code-reviewer  │
+                                     │                └────────┬────────┘
+                                     │            APPROVATO    │    MODIFICHE
+                                     │                         │    RICHIESTE
+                                     │                         │        │
+                                     │                         ▼        └──┐
+                                     │                   PR → agent:review │
+                                     │                         │           │
+                                     │                      merge          │
+                                     │                         ▼           │
+                                     │                      chiusa         │
+                                     └── serve una decisione ──▶ agent:blocked ◀┘
 ```
+
+Il branch si chiama come la issue: `/issue-take` deriva il nome dal titolo
+(`fix/issue-7-app-component-spec-ts-e-lo-scaffold-morto`). Chi guarda
+`git branch` capisce cosa c'è dentro senza aprire GitHub.
+
+## Il gate di review
+
+**Nessuna PR senza review.** `/issue-done` lancia il subagent `code-reviewer`
+sul diff e si ferma se il verdetto non è `APPROVATO`. Non revisioni il tuo
+lavoro: chi ha scritto il codice è la persona peggio posizionata per giudicarlo,
+e un agente che revisiona sé stesso approva sempre.
+
+Prima della review devono essere verdi, con **exit code vero** (`set -o pipefail`
+— `comando | tail` restituisce l'exit code di `tail`):
+
+```bash
+cd app/backend  && mvn clean verify
+cd app/frontend && npx ng build --configuration production   # build AOT
+cd app/frontend && npx ng lint
+```
+
+Se non sei d'accordo con un rilievo del revisore, **non ignorarlo**: rispondi
+nel corpo della PR spiegando perché. Un gate che si aggira in silenzio non è un gate.
+
+## Si parte sempre da main aggiornato
+
+```bash
+git switch main && git pull --ff-only origin main
+git switch -c <tipo>/issue-<n>-<slug-dal-titolo>
+```
+
+Un branch nato da un `main` vecchio si porta dentro commit estranei e produce
+conflitti che non c'entrano col lavoro. Si paga sempre, e si paga in review.
+
+L'hook `guard-branch-base.sh` **blocca** `git switch -c` / `git checkout -b` se
+non sei su `main` o se `main` è indietro rispetto a `origin/main`. Se sei
+offline non blocca: non potendo verificare, non ti impedisce di lavorare.
+Derivare da un altro branch è un'**eccezione da dichiarare**, non la norma.
+
+## Il link della PR si riporta sempre
+
+Quando apri una PR, **scrivine l'URL nella risposta**. L'hook `pr-link.sh` lo
+intercetta, lo stampa e lo registra in `.claude/pr-links.log`; `session-brief.sh`
+rielenca le PR aperte a ogni avvio di sessione. Tre reti perché una PR aperta e
+mai più nominata è lavoro finito che nessuno chiude.
 
 ## Le tre regole che non si negoziano
 

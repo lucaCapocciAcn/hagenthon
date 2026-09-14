@@ -12,7 +12,7 @@ dentro `.claude/` è `settings.json`, perché deve stare lì.
 
 ```
 agents/
-├── subagents/   6 agenti specializzati        → chi esegue
+├── subagents/   7 agenti specializzati        → chi esegue
 ├── skills/      3 pattern riusabili           → come si fa una cosa specifica
 ├── rules/       4 regole per area             → cosa è ammesso in quest'area
 ├── commands/    3 comandi                     → il flusso di lavoro, eseguibile
@@ -66,6 +66,7 @@ haiku per task ripetitivi e template-driven.
 | `pdf-form-engineer` | PDFBox: estrai e compila campi AcroForm | **sonnet** | Coding focalizzato su libreria specifica |
 | `ollama-integration-builder` | Client Ollama + generazione domande semplificate | **sonnet** | Coding + integrazione HTTP |
 | `test-pdf-generator` | Genera PDF AcroForm di esempio | **haiku** | Task ripetitivo e template-driven → costo token minimo |
+| `code-reviewer` | Revisiona il diff prima della PR ed emette un verdetto | **sonnet** | Giudizio su un diff circoscritto, con le regole già scritte come riferimento. Non ha `Write`/`Edit`: un revisore che aggiusta non sta revisionando |
 
 ---
 
@@ -101,8 +102,8 @@ quelle regole sono scritte a mano per questo progetto.
 
 | Comando | Cosa fa |
 | --- | --- |
-| `/issue-take <n>` | Verifica che sia prendibile, passa a `agent:in-progress`, crea il branch, indica quali regole leggere |
-| `/issue-done <n>` | Build verde → commit → PR → `agent:review`. Non fa merge: decide una persona |
+| `/issue-take <n>` | Verifica che sia prendibile, passa a `agent:in-progress`, **crea il branch derivandone il nome dal titolo della issue**, indica quali regole leggere |
+| `/issue-done <n>` | Build AOT + lint verdi → **review obbligatoria del subagent `code-reviewer`** → commit → PR → `agent:review`. Non fa merge: decide una persona |
 | `/harness-check` | Symlink, hook eseguibili, regole orfane, label mancanti |
 
 ## Hook — i vincoli che non si possono ignorare
@@ -110,17 +111,37 @@ quelle regole sono scritte a mano per questo progetto.
 | Hook | Evento | Cosa impone |
 | --- | --- | --- |
 | `guard-main.sh` | `PreToolUse(Bash)` | Blocca `git commit`/`push` su `main`. Il contributo degli agenti deve restare leggibile in diff separati |
-| `session-brief.sh` | `SessionStart` | Cinque righe: branch e issue `agent:ready`. Volutamente cortissimo |
+| `session-brief.sh` | `SessionStart` | Poche righe: branch (e se è indietro), **PR aperte**, issue `agent:ready`. Volutamente cortissimo |
+| `guard-branch-base.sh` | `PreToolUse(Bash)` | Un branch nuovo nasce **solo da `main` allineato a `origin/main`**. Offline non blocca: non potendo verificare, non impedisce di lavorare |
+| `pr-link.sh` | `PostToolUse(Bash)` | Intercetta l'URL di una PR appena aperta, lo stampa e lo registra in `.claude/pr-links.log`. Una PR mai più nominata è lavoro che nessuno chiude |
 | `format-touched.sh` | `PostToolUse(Write\|Edit)` | Formatta solo il file toccato, in silenzio |
 
 Sono scritti per girare **anche sulla macchina di chi valuta**: escono `0`
 quando non hanno niente da fare e non assumono che `jq`, `mvn` o `prettier`
-esistano. Verificabili a mano:
+esistano. `_lib.sh` fornisce un `run_timeout` portabile perché **`timeout` è
+GNU e su macOS non esiste** — un hook che lo usa fallisce in silenzio. Verificabili a mano:
 
 ```bash
 echo '{"tool_input":{"command":"git commit -m x"}}' | ./agents/hooks/guard-main.sh
 echo "exit=$?"   # 2 = bloccato correttamente
 ```
+
+## Il gate di review
+
+`/issue-done` **non apre la PR** finché il subagent `code-reviewer` non emette
+`VERDETTO: APPROVATO`. Gli altri due esiti — `MODIFICHE RICHIESTE` e `BLOCCATO`
+— fermano il flusso. È la risposta a un problema concreto: chi ha scritto il
+codice è la persona peggio posizionata per revisionarlo, e un agente che
+revisiona sé stesso approva sempre.
+
+Il revisore non ha `Write` né `Edit`. Non è una dimenticanza: senza la
+possibilità di correggere, l'unica cosa che può fare è **dire** cosa non va, e
+il rilievo resta agli atti invece di sparire in una modifica silenziosa.
+
+Chiede sei cose, in ordine: fa quello che la issue chiedeva (né meno né più) ·
+viola una regola dell'area · quale input concreto la rompe · i test coprono il
+comportamento nuovo · il flusso si blocca mai · l'errore resta leggibile da chi
+usa l'app. E **riesegue** build AOT, lint e test invece di fidarsi del diff.
 
 ## Ciclo di vita delle issue
 

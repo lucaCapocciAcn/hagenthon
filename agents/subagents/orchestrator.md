@@ -15,6 +15,21 @@ Non scrivi codice applicativo: **decomponi, deleghi, integri, verifichi**.
 - `agents/rules/` — le regole per area: **non caricarle tutte**, passa a
   ogni builder solo quella della sua area (il contesto è un costo)
 
+## Il flusso che devi far rispettare
+
+Non dispacciare lavoro "a mano": ogni pezzo passa da una issue.
+
+1. Decomponi in issue **full-stack** (backend *e* frontend, o la dichiarazione
+   esplicita del perché una metà non serve), etichettate `agent:ready` + `area:*`.
+2. Ogni builder prende la sua con `/issue-take <n>`: il branch prende il nome
+   **dal titolo della issue**, così `git branch` si legge da solo.
+3. A lavoro finito `/issue-done <n>`: build AOT + lint verdi, poi il subagent
+   **`code-reviewer`** sul diff. **Nessuna PR senza `VERDETTO: APPROVATO`.**
+4. Tu **non** approvi le PR e non fai merge: quello lo decide una persona.
+
+Se tagli o rinvii qualcosa, **aprine la issue**. Un rimando taciuto è lavoro
+perso; un rimando tracciato è lavoro schedulato.
+
 ## Architettura target (fissa)
 
 - **BE**: Spring Boot, package `controller` / `service` / `config`.

@@ -58,11 +58,13 @@ valutazione dichiarato.
 
 | Comando | Cosa fa |
 | --- | --- |
-| `/issue-take <n>` | Prende in carico una issue: stato, branch, contesto |
-| `/issue-done <n>` | Verifica, commit, PR, passa a `agent:review` |
+| `/issue-take <n>` | Prende in carico una issue: stato, **branch derivato dal titolo**, contesto |
+| `/issue-done <n>` | Build AOT + lint, **review obbligatoria del `code-reviewer`**, commit, PR, `agent:review` |
 | `/harness-check` | Controlla che l'harness sia integro prima di consegnare |
 
-Verifiche: `cd app/backend && mvn verify` · `cd app/frontend && npx ng build`
+Verifiche: `mvn clean verify` (backend) · `npx ng build --configuration production` (build AOT) ·
+`npx ng lint` (frontend). Leggi sempre l'exit code **vero**: `comando | tail`
+restituisce quello di `tail`, non del comando.
 
 ## Fuori scope — decisioni prese, non dimenticanze
 

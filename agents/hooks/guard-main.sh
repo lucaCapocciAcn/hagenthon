@@ -3,7 +3,7 @@
 # Ogni lavoro passa da un branch e da una PR: è ciò che rende tracciabile
 # il contributo degli agenti.
 set -uo pipefail
-. "$(dirname "$0")/_json.sh"
+. "$(dirname "$0")/_lib.sh"
 
 raw="$(cat)"
 cmd="$(json_field '.tool_input.command' "$raw")"

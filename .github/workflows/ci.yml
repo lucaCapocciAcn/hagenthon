@@ -54,6 +54,15 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Nessuno step di lint: il linter non è ancora installato sul frontend.
-      - name: Build
-        run: npm run build
+      - name: Lint (ESLint + regole di accessibilità)
+        run: npm run lint
+
+      # In Angular l'AOT non è un flag: il builder `application` compila sempre
+      # in AOT. È qui che emergono gli errori di tipo nei template, che
+      # `ng serve` non mostra. Per questo il build di CI è quello di produzione.
+      - name: Build AOT di produzione
+        run: npx ng build --configuration production
+
+      # `npm test` è volutamente assente: la suite è rossa per uno spec
+      # scaffold mai adattato (issue #7). Va riattivato quando #7 è chiusa —
+      # un job verde che salta i test è peggio di un job che non li ha.
