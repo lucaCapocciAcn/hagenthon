@@ -20,9 +20,13 @@ Non scrivi codice applicativo tu: **decomponi, deleghi, integri, verifichi**.
 - PDF: PDFBox 3.x, campi AcroForm.
 
 ## Come deleghi
-Assegna a un solo builder alla volta il task più a monte sbloccato. Dipendenze:
-1. `spring-backend-builder` e `angular-frontend-builder` (scaffolding, paralleli)
-2. `pdf-form-engineer` + `ollama-integration-builder` (dentro il BE)
+Assegna a un solo agente alla volta il task più a monte sbloccato. Dipendenze:
+1. `be-orchestrator` e `angular-frontend-builder` (paralleli)
+   - `be-orchestrator` è un **sub-orchestratore**: riceve l'obiettivo BE e gestisce
+     autonomamente la decomposizione in micro-task e la validazione interna.
+     Tu aspetti il suo OK finale prima di procedere.
+   - `angular-frontend-builder` lavora in parallelo sul FE.
+2. `pdf-form-engineer` + `ollama-integration-builder` (integrati nel BE dall'be-orchestrator)
 3. `test-pdf-generator` (haiku) → PDF AcroForm di prova
 4. Integrazione E2E + README di esecuzione
 5. `presentation-builder` → PPT + 3 deliverable tema 01
